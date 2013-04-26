@@ -3,29 +3,34 @@ PLUGIN_IMPORT_PATH = org/nemomobile/alarms
 
 TEMPLATE = lib
 CONFIG += qt plugin hide_symbols
-QT += declarative
+equals(QT_MAJOR_VERSION, 4): QT += declarative
+equals(QT_MAJOR_VERSION, 5): QT += qml quick
 
-target.path = $$[QT_INSTALL_IMPORTS]/$$PLUGIN_IMPORT_PATH
+equals(QT_MAJOR_VERSION, 4): target.path = $$[QT_INSTALL_IMPORTS]/$$PLUGIN_IMPORT_PATH
+equals(QT_MAJOR_VERSION, 5): target.path = $$[QT_INSTALL_QML]/$$PLUGIN_IMPORT_PATH
 INSTALLS += target
 
 qmldir.files += $$_PRO_FILE_PWD_/qmldir
-qmldir.path +=  $$[QT_INSTALL_IMPORTS]/$$$$PLUGIN_IMPORT_PATH
+qmldir.path +=  $$target.path
 INSTALLS += qmldir
 
 QT += dbus
 
 CONFIG += link_pkgconfig
-PKGCONFIG += timed timed-voland
+equals(QT_MAJOR_VERSION, 4): PKGCONFIG += timed timed-voland
+equals(QT_MAJOR_VERSION, 5): PKGCONFIG += timed-qt5 timed-voland-qt5
 
-SOURCES += plugin.cpp \
-    alarmsbackendmodel.cpp \
-    alarmsbackendmodel_p.cpp \
-    alarmobject.cpp \
-    alarmhandlerinterface.cpp \
-    alarmdialogobject.cpp
+isEmpty(SRCDIR) SRCDIR = "."
 
-HEADERS += alarmsbackendmodel.h \
-    alarmsbackendmodel_p.h \
-    alarmobject.h \
-    alarmhandlerinterface.h \
-    alarmdialogobject.h
+SOURCES += $$SRCDIR/plugin.cpp \
+    $$SRCDIR/alarmsbackendmodel.cpp \
+    $$SRCDIR/alarmsbackendmodel_p.cpp \
+    $$SRCDIR/alarmobject.cpp \
+    $$SRCDIR/alarmhandlerinterface.cpp \
+    $$SRCDIR/alarmdialogobject.cpp
+
+HEADERS += $$SRCDIR/alarmsbackendmodel.h \
+    $$SRCDIR/alarmsbackendmodel_p.h \
+    $$SRCDIR/alarmobject.h \
+    $$SRCDIR/alarmhandlerinterface.h \
+    $$SRCDIR/alarmdialogobject.h

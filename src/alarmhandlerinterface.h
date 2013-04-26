@@ -33,8 +33,16 @@
 #ifndef ALARMHANDLERINTERFACE_H
 #define ALARMHANDLERINTERFACE_H
 
-#include <QDeclarativeItem>
-#include <timed-voland/interface>
+#include <QtGlobal>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+# include <timed-voland-qt5/interface>
+# include <QQuickItem>
+# define QDeclarativeItem QQuickItem
+#else
+# include <timed-voland/interface>
+# include <QDeclarativeItem>
+#endif
 
 class VolandAdaptor;
 class AlarmDialogObject;

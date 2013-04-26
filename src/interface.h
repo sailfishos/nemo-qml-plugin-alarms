@@ -33,7 +33,11 @@
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
-#include <timed/interface>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+# include <timed-qt5/interface>
+#else
+# include <timed/interface>
+#endif
 
 class TimedInterface : public Maemo::Timed::Interface
 {
