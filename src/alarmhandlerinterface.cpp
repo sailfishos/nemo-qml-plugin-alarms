@@ -32,7 +32,6 @@
 
 #include "alarmhandlerinterface.h"
 #include "alarmdialogobject.h"
-#include <timed-voland/interface>
 #include <QTimer>
 
 AlarmHandlerInterface::AlarmHandlerInterface(QDeclarativeItem *parent)

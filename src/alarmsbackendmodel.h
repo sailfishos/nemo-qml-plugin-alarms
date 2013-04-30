@@ -79,9 +79,15 @@ public:
 signals:
     void populatedChanged();
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+protected:
+    QHash<int, QByteArray> roleNames() const;
+#endif
+
 private:
     friend class AlarmsBackendModelPriv;
     AlarmsBackendModelPriv *priv;
+    QHash<int,QByteArray> roles;
 };
 
 #endif // ALARMSBACKENDMODEL_H

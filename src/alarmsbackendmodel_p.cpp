@@ -35,7 +35,12 @@
 #include "interface.h"
 #include <QDBusMessage>
 #include <QDBusReply>
-#include <QDeclarativeEngine>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+# include <QQmlEngine>
+# define QDeclarativeEngine QQmlEngine
+#else
+# include <QDeclarativeEngine>
+#endif
 #include <algorithm>
 
 inline static bool alarmSort(AlarmObject *a1, AlarmObject *a2)

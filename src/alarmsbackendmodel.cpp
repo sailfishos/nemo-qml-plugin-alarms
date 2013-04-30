@@ -37,14 +37,16 @@
 AlarmsBackendModel::AlarmsBackendModel(QObject *parent)
     : QAbstractListModel(parent)
 {
-    QHash<int,QByteArray> roles;
     roles[Qt::DisplayRole] = "title";
     roles[AlarmObjectRole] = "alarm";
     roles[EnabledRole] = "enabled";
     roles[HourRole] = "hour";
     roles[MinuteRole] = "minute";
     roles[WeekDaysRole] = "daysOfWeek";
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     setRoleNames(roles);
+#endif
 
     priv = new AlarmsBackendModelPriv(this);
 }
@@ -52,6 +54,13 @@ AlarmsBackendModel::AlarmsBackendModel(QObject *parent)
 AlarmsBackendModel::~AlarmsBackendModel()
 {
 }
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+QHash<int, QByteArray> AlarmsBackendModel::roleNames() const
+{
+    return roles;
+}
+#endif
 
 AlarmObject *AlarmsBackendModel::createAlarm()
 {
