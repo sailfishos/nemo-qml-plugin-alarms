@@ -141,8 +141,13 @@ void AlarmsBackendModelPriv::attributesReply(QDBusPendingCallWatcher *call)
 void AlarmsBackendModelPriv::alarmTriggersChanged(QMap<quint32, quint32> triggerMap)
 {
     foreach (AlarmObject *alarm, alarms) {
-        if (!triggerMap.contains(alarm->id()))
-            alarm->setEnabled(false);
+        if (!triggerMap.contains(alarm->id())) {
+            // Extra enabling logic is needed for not resetting alarms that were not active
+            if (alarm->isEnabled()) {
+                alarm->setEnabled(false);
+                alarm->reset();
+            }
+        }
     }
 }
 

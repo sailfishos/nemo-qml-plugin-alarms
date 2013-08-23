@@ -44,13 +44,15 @@
 
 AlarmObject::AlarmObject(QObject *parent)
     : QObject(parent), m_hour(0), m_minute(0), m_enabled(false),
-      m_createdDate(QDateTime::currentDateTime()), m_cookie(0)
+      m_createdDate(QDateTime::currentDateTime()), m_countdown(false), m_triggerTime(0),
+      m_elapsed(0), m_cookie(0)
 {
 }
 
 AlarmObject::AlarmObject(const QMap<QString,QString> &data, QObject *parent)
     : QObject(parent), m_hour(0), m_minute(0), m_enabled(false),
-      m_createdDate(QDateTime::currentDateTime()), m_cookie(0)
+      m_createdDate(QDateTime::currentDateTime()), m_countdown(false), m_triggerTime(0),
+      m_elapsed(0), m_cookie(0)
 {
     for (QMap<QString,QString>::ConstIterator it = data.begin(); it != data.end(); it++) {
         if (it.key() == "TITLE")
@@ -61,6 +63,8 @@ AlarmObject::AlarmObject(const QMap<QString,QString> &data, QObject *parent)
             setDaysOfWeek(it.value());
         else if (it.key() == "createdDate")
             m_createdDate = QDateTime::fromString(it.value());
+        else if (it.key() == "elapsed")
+            m_elapsed = it.value().toInt();
         else if (it.key() == "timeOfDay") {
             int value = it.value().toInt();
             m_hour = value / 60;
@@ -70,7 +74,16 @@ AlarmObject::AlarmObject(const QMap<QString,QString> &data, QObject *parent)
                 m_enabled = false;
             else
                 m_enabled = true;
+        } else if (it.key() == "triggerTime") {
+            m_countdown = true;
+            m_triggerTime = it.value().toUInt();
         }
+    }
+
+    if (m_enabled && m_countdown) {
+        // Timer is running
+        uint now = QDateTime::currentDateTimeUtc().toTime_t();
+        m_elapsed = m_triggerTime - now;
     }
 }
 
@@ -134,48 +147,89 @@ void AlarmObject::setEnabled(bool enabled)
     emit enabledChanged();
 }
 
+void AlarmObject::setCountdown(bool countdown)
+{
+    if (m_countdown == countdown)
+        return;
+
+    m_countdown = countdown;
+    emit countdownChanged();
+}
+
+void AlarmObject::reset()
+{
+    if (!m_countdown)
+        return;
+
+    m_elapsed = 0;
+    m_triggerTime = 0;
+    emit elapsedChanged();
+    emit triggerTimeChanged();
+}
+
 void AlarmObject::save()
 {
     try {
         Maemo::Timed::Event ev;
         // Keep the event after it has triggered
         ev.setKeepAliveFlag();
-        ev.setAlarmFlag();
         // Trigger the voland alarm/reminder dialog
         ev.setReminderFlag();
-        ev.setBootFlag();
-
-        ev.setAttribute(QLatin1String("APPLICATION"), QLatin1String("nemoalarms"));
-        ev.setAttribute(QLatin1String("createdDate"), m_createdDate.toString());
         if (!m_title.isEmpty())
             ev.setAttribute(QLatin1String("TITLE"), m_title);
 
         ev.setAttribute(QLatin1String("timeOfDay"), QString::number(m_hour * 60 + m_minute));
+        ev.setAttribute(QLatin1String("APPLICATION"), QLatin1String("nemoalarms"));
+        ev.setAttribute(QLatin1String("createdDate"), m_createdDate.toString());
+        ev.setAlarmFlag();
 
-        if (!m_daysOfWeek.isEmpty())
-            ev.setAttribute(QLatin1String("daysOfWeek"), m_daysOfWeek);
+        if (!m_countdown) {
+            ev.setBootFlag();
 
-        if (m_enabled) {
-            Maemo::Timed::Event::Recurrence rec = ev.addRecurrence();
-            rec.addHour(m_hour);
-            rec.addMinute(m_minute);
-            rec.everyDayOfMonth();
-            rec.everyMonth();
+            if (!m_daysOfWeek.isEmpty())
+                ev.setAttribute(QLatin1String("daysOfWeek"), m_daysOfWeek);
 
-            // Single-shot alarms are done with a recurrence and the single-shot
-            // flag, which removes recurrence information after the first trigger.
-            if (m_daysOfWeek.isEmpty()) {
-                rec.everyDayOfWeek();
-                ev.setSingleShotFlag();
+            if (m_enabled) {
+                Maemo::Timed::Event::Recurrence rec = ev.addRecurrence();
+                rec.addHour(m_hour);
+                rec.addMinute(m_minute);
+                rec.everyDayOfMonth();
+                rec.everyMonth();
+
+                // Single-shot alarms are done with a recurrence and the single-shot
+                // flag, which removes recurrence information after the first trigger.
+                if (m_daysOfWeek.isEmpty()) {
+                    rec.everyDayOfWeek();
+                    ev.setSingleShotFlag();
+                }
+
+                // Map characters to numeric weekdays used by libtimed
+                QString weekdayMap(QLatin1String("SmtwTfs"));
+                for (int i = 0; i < m_daysOfWeek.size(); i++) {
+                    int day = weekdayMap.indexOf(m_daysOfWeek[i]);
+                    if (day >= 0)
+                        rec.addDayOfWeek(day);
+                }
             }
-
-            // Map characters to numeric weekdays used by libtimed
-            QString weekdayMap(QLatin1String("SmtwTfs"));
-            for (int i = 0; i < m_daysOfWeek.size(); i++) {
-                int day = weekdayMap.indexOf(m_daysOfWeek[i]);
-                if (day >= 0)
-                    rec.addDayOfWeek(day);
+        } else {
+            uint duration = m_hour * 3600 + m_minute * 60;
+            QDateTime now = QDateTime::currentDateTimeUtc();
+            if (m_enabled) {
+                QDateTime triggerDateTime = now.addSecs(duration - m_elapsed);
+                m_triggerTime = triggerDateTime.toTime_t();
+                ev.setTicker(triggerDateTime.toTime_t());
+            } else {
+                if (m_triggerTime > 0) {
+                    m_elapsed = (duration - (m_triggerTime - now.toTime_t()));
+                    m_triggerTime = 0;
+                } else {
+                    m_elapsed = 0;
+                }
+                emit elapsedChanged();
+                ev.setAttribute(QLatin1String("elapsed"), QString::number(m_elapsed));
             }
+            emit triggerTimeChanged();
+            ev.setAttribute(QLatin1String("triggerTime"), QString::number(m_triggerTime));
         }
 
         QDBusPendingCallWatcher *w;
