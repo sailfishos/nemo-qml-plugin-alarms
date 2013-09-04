@@ -141,9 +141,12 @@ public:
      *  \qmlproperty bool Alarm::triggerTime
      *
      *  Indicates the trigger time in seconds since Unix epoch. Valid only for
-     *  countdown alarms.
+     *  countdown alarms. The remaining time for an countdown alarm can be
+     *  calculated \a triggerTime - now - \a elapsed, where now is the current
+     *  time expressed as seconds since the Unix epoch.
      *
      *  \sa countdown
+     *  \sa elapsed
      */
     Q_PROPERTY(uint triggerTime READ triggerTime NOTIFY triggerTimeChanged)
     uint triggerTime() const { return m_triggerTime; }
@@ -152,9 +155,17 @@ public:
      *  \qmlproperty bool Alarm::elapsed
      *
      *  Indicates the elapsed time for a countdown alarm in seconds. Valid only for
-     *  countdown alarms.
+     *  countdown alarms. When an alarm is not enabled, then \a elapsed indicates how
+     *  long the countdown alarm has been running before it was paused. If an alarm is
+     *  running, then \a elapsed indicates how long the countdown alarm has been running
+     *  before getting enabled.
+     *
+     *  The \a elapsed property is not updated in realtime when an alarm is enabled, it
+     *  simply indicates how long the alarm has been running in the past. See \a triggerTime
+     *  about how to calculate the remaining time of a countdown alarm.
      *
      *  \sa countdown
+     *  \sa triggerTime
      */
     Q_PROPERTY(int elapsed READ getElapsed NOTIFY elapsedChanged)
     int getElapsed() const { return m_elapsed; }
