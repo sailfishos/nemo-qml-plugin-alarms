@@ -13,7 +13,7 @@ Builder: qmake
 PkgConfigBR:
     - QtCore >= 4.7.0
     - QtDeclarative
-    - timed
+    - timed >= 2.67
 Provides:
     - nemo-qml-plugins-alarms > 0.3.15
 Obsoletes:
