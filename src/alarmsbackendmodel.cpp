@@ -35,7 +35,7 @@
 #include "alarmobject.h"
 
 AlarmsBackendModel::AlarmsBackendModel(QObject *parent)
-    : QAbstractListModel(parent)
+    : QAbstractListModel(parent), completed(false)
 {
     roles[Qt::DisplayRole] = "title";
     roles[AlarmObjectRole] = "alarm";
@@ -75,6 +75,23 @@ bool AlarmsBackendModel::isPopulated() const
     return priv->populated;
 }
 
+bool AlarmsBackendModel::isOnlyCountdown() const
+{
+    return priv->countdown;
+}
+
+void AlarmsBackendModel::setOnlyCountdown(bool countdown)
+{
+    if (priv->countdown == countdown)
+        return;
+
+    priv->countdown = countdown;
+    emit onlyCountdownChanged();
+
+    if (completed)
+        priv->populate();
+}
+
 int AlarmsBackendModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
@@ -99,5 +116,15 @@ QVariant AlarmsBackendModel::data(const QModelIndex &index, int role) const
     }
 
     return QVariant();
+}
+
+void AlarmsBackendModel::classBegin()
+{
+}
+
+void AlarmsBackendModel::componentComplete()
+{
+    priv->populate();
+    completed = true;
 }
 

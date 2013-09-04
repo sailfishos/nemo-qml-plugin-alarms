@@ -68,9 +68,10 @@ inline static bool alarmSort(AlarmObject *a1, AlarmObject *a2)
 }
 
 AlarmsBackendModelPriv::AlarmsBackendModelPriv(AlarmsBackendModel *m)
-    : QObject(m), q(m), populated(false)
+    : QObject(m), q(m), populated(false), countdown(false)
 {
-    populate();
+    connect(TimedInterface::instance(), SIGNAL(alarmTriggersChanged(QMap<quint32,quint32>)),
+            this, SLOT(alarmTriggersChanged(QMap<quint32,quint32>)));
 }
 
 void AlarmsBackendModelPriv::populate()
@@ -78,6 +79,11 @@ void AlarmsBackendModelPriv::populate()
     // Retrieve a list of cookies created by nemoalarms
     QMap<QString,QVariant> attributes;
     attributes.insert(QLatin1String("APPLICATION"), "nemoalarms");
+    if (countdown)
+        attributes.insert(QLatin1String("type"), "countdown");
+    else
+        attributes.insert(QLatin1String("type"), "clock");
+
     QDBusPendingCallWatcher *reply = new QDBusPendingCallWatcher(TimedInterface::instance()->query_async(attributes), this);
     connect(reply, SIGNAL(finished(QDBusPendingCallWatcher*)), SLOT(queryReply(QDBusPendingCallWatcher*)));
 }
@@ -133,6 +139,19 @@ void AlarmsBackendModelPriv::attributesReply(QDBusPendingCallWatcher *call)
     if (!populated) {
         populated = true;
         emit q->populatedChanged();
+    }
+}
+
+void AlarmsBackendModelPriv::alarmTriggersChanged(QMap<quint32, quint32> triggerMap)
+{
+    foreach (AlarmObject *alarm, alarms) {
+        if (!triggerMap.contains(alarm->id())) {
+            // Extra enabling logic is needed for not resetting alarms that were not active
+            if (alarm->isEnabled()) {
+                alarm->setEnabled(false);
+                alarm->reset();
+            }
+        }
     }
 }
 

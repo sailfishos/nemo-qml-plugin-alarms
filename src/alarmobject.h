@@ -124,6 +124,65 @@ public:
     QDateTime createdDate() const { return m_createdDate; }
 
     /*!
+     *  \qmlproperty bool Alarm::countdown
+     *
+     *  True to make the alarm a countdown alarm, which will trigger after
+     *  \a hour hours and \a min minutes.
+     *
+     *  \sa triggerTime
+     *  \sa elapsed
+     *  \sa reset
+     */
+    Q_PROPERTY(bool countdown READ isCountdown WRITE setCountdown NOTIFY countdownChanged)
+    bool isCountdown() const { return m_countdown; }
+    void setCountdown(bool countdown);
+
+    /*!
+     *  \qmlproperty bool Alarm::triggerTime
+     *
+     *  Indicates the trigger time in seconds since Unix epoch. Valid only for
+     *  countdown alarms. The remaining time for an countdown alarm can be
+     *  calculated \a triggerTime - now - \a elapsed, where now is the current
+     *  time expressed as seconds since the Unix epoch.
+     *
+     *  \sa countdown
+     *  \sa elapsed
+     */
+    Q_PROPERTY(uint triggerTime READ triggerTime NOTIFY triggerTimeChanged)
+    uint triggerTime() const { return m_triggerTime; }
+
+    /*!
+     *  \qmlproperty bool Alarm::elapsed
+     *
+     *  Indicates the elapsed time for a countdown alarm in seconds. Valid only for
+     *  countdown alarms. When an alarm is not enabled, then \a elapsed indicates how
+     *  long the countdown alarm has been running before it was paused. If an alarm is
+     *  running, then \a elapsed indicates how long the countdown alarm has been running
+     *  before getting enabled.
+     *
+     *  The \a elapsed property is not updated in realtime when an alarm is enabled, it
+     *  simply indicates how long the alarm has been running in the past. See \a triggerTime
+     *  about how to calculate the remaining time of a countdown alarm.
+     *
+     *  \sa countdown
+     *  \sa triggerTime
+     */
+    Q_PROPERTY(int elapsed READ getElapsed NOTIFY elapsedChanged)
+    int getElapsed() const { return m_elapsed; }
+
+    /*!
+     *  \qmlmethod void Alarm::reset()
+     *
+     *  If the alarm is a countdown alarm, then sets \a elapsed and \a triggerTime to 0.
+     *  If the alarm is not a countdown alarm, then does nothing.
+     *
+     *  \sa countdown
+     *  \sa triggerTime
+     *  \sa elapsed
+     */
+    Q_INVOKABLE void reset();
+
+    /*!
      *  \qmlmethod void Alarm::save()
      *
      *  Commit changes to the object to the backend. No modifications, including \a enabled,
@@ -146,6 +205,9 @@ signals:
     void daysOfWeekChanged();
     void enabledChanged();
     void idChanged();
+    void countdownChanged();
+    void triggerTimeChanged();
+    void elapsedChanged();
 
     /*!
      *  \qmlsignal Alarm::updated()
@@ -183,6 +245,9 @@ protected:
     QString m_daysOfWeek;
     bool m_enabled;
     QDateTime m_createdDate;
+    bool m_countdown;
+    uint m_triggerTime;
+    uint m_elapsed;
 
     // Timed
     unsigned m_cookie;

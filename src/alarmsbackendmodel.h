@@ -34,11 +34,12 @@
 #define ALARMSBACKENDMODEL_H
 
 #include <QAbstractListModel>
+#include <QQmlParserStatus>
 
 class AlarmsBackendModelPriv;
 class AlarmObject;
 
-class AlarmsBackendModel : public QAbstractListModel
+class AlarmsBackendModel : public QAbstractListModel, public QQmlParserStatus
 {
     Q_OBJECT
 
@@ -73,11 +74,19 @@ public:
     Q_PROPERTY(bool populated READ isPopulated NOTIFY populatedChanged)
     bool isPopulated() const;
 
+    Q_PROPERTY(bool onlyCountdown READ isOnlyCountdown WRITE setOnlyCountdown NOTIFY onlyCountdownChanged)
+    bool isOnlyCountdown() const;
+    void setOnlyCountdown(bool countdown);
+
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
 
+    void classBegin();
+    void componentComplete();
+
 signals:
     void populatedChanged();
+    void onlyCountdownChanged();
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 protected:
@@ -88,6 +97,7 @@ private:
     friend class AlarmsBackendModelPriv;
     AlarmsBackendModelPriv *priv;
     QHash<int,QByteArray> roles;
+    bool completed;
 };
 
 #endif // ALARMSBACKENDMODEL_H

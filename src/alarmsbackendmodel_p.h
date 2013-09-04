@@ -32,7 +32,6 @@
 
 #ifndef ALARMSBACKENDMODEL_P_H
 #define ALARMSBACKENDMODEL_P_H
-
 #include "alarmsbackendmodel.h"
 
 class AlarmObject;
@@ -46,8 +45,10 @@ public:
     AlarmsBackendModel *q;
     QList<AlarmObject*> alarms;
     bool populated;
+    bool countdown;
 
     AlarmsBackendModelPriv(AlarmsBackendModel *q);
+    void populate();
 
 public slots:
     void alarmUpdated();
@@ -58,9 +59,7 @@ public slots:
 private slots:
     void queryReply(QDBusPendingCallWatcher *w);
     void attributesReply(QDBusPendingCallWatcher *w);
-
-private:
-    void populate();
+    void alarmTriggersChanged(QMap<quint32, quint32> triggerMap);
 };
 
 #endif
