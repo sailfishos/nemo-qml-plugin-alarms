@@ -45,8 +45,10 @@ public:
     AlarmsBackendModel *q;
     QList<AlarmObject*> alarms;
     bool populated;
+    bool countdown;
 
     AlarmsBackendModelPriv(AlarmsBackendModel *q);
+    void populate();
 
 public slots:
     void alarmUpdated();
@@ -58,9 +60,6 @@ private slots:
     void queryReply(QDBusPendingCallWatcher *w);
     void attributesReply(QDBusPendingCallWatcher *w);
     void alarmTriggersChanged(QMap<quint32, quint32> triggerMap);
-
-private:
-    void populate();
 };
 
 #endif

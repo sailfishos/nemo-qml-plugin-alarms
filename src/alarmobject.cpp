@@ -211,6 +211,7 @@ void AlarmObject::save()
                         rec.addDayOfWeek(day);
                 }
             }
+            ev.setAttribute(QLatin1String("type"), QLatin1String("clock"));
         } else {
             uint duration = m_hour * 3600 + m_minute * 60;
             QDateTime now = QDateTime::currentDateTimeUtc();
@@ -230,6 +231,7 @@ void AlarmObject::save()
             }
             emit triggerTimeChanged();
             ev.setAttribute(QLatin1String("triggerTime"), QString::number(m_triggerTime));
+            ev.setAttribute(QLatin1String("type"), QLatin1String("countdown"));
         }
 
         QDBusPendingCallWatcher *w;
