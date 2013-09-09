@@ -151,6 +151,8 @@ void AlarmsBackendModelPriv::alarmTriggersChanged(QMap<quint32, quint32> trigger
                 alarm->setEnabled(false);
                 alarm->reset();
             }
+        } else if (!alarm->isCountdown()) {
+            alarm->setEnabled(true);
         }
     }
 }
