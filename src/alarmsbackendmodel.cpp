@@ -52,6 +52,7 @@ QHash<int, QByteArray> AlarmsBackendModel::roleNames() const
     roles[EnabledRole] = "enabled";
     roles[HourRole] = "hour";
     roles[MinuteRole] = "minute";
+    roles[SecondRole] = "second";
     roles[WeekDaysRole] = "daysOfWeek";
     return roles;
 }
@@ -106,6 +107,7 @@ QVariant AlarmsBackendModel::data(const QModelIndex &index, int role) const
         case EnabledRole: return alarm->isEnabled();
         case HourRole: return alarm->hour();
         case MinuteRole: return alarm->minute();
+        case SecondRole: return alarm->second();
         case WeekDaysRole: return alarm->daysOfWeek();
     }
 
