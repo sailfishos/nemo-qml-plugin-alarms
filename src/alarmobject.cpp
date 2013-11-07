@@ -61,9 +61,13 @@ AlarmObject::AlarmObject(const QMap<QString,QString> &data, QObject *parent)
             m_cookie = it.value().toUInt();
         else if (it.key() == "daysOfWeek")
             setDaysOfWeek(it.value());
-        else if (it.key() == "createdDate")
+        else if (it.key() == "createdDate") {
+            // Try first to convert date from string, previous versions stored createdDate as a
+            // stringified QDateTime, which caused problems whith different locales.
             m_createdDate = QDateTime::fromString(it.value());
-        else if (it.key() == "elapsed")
+            if (!m_createdDate.isValid())
+                m_createdDate = QDateTime::fromMSecsSinceEpoch(it.value().toLongLong());
+        } else if (it.key() == "elapsed")
             m_elapsed = it.value().toInt();
         else if (it.key() == "timeOfDay") {
             int value = it.value().toInt();
@@ -180,7 +184,7 @@ void AlarmObject::save()
 
         ev.setAttribute(QLatin1String("timeOfDay"), QString::number(m_hour * 60 + m_minute));
         ev.setAttribute(QLatin1String("APPLICATION"), QLatin1String("nemoalarms"));
-        ev.setAttribute(QLatin1String("createdDate"), m_createdDate.toString());
+        ev.setAttribute(QLatin1String("createdDate"), QString::number(m_createdDate.toMSecsSinceEpoch()));
         ev.setAlarmFlag();
 
         if (!m_countdown) {
