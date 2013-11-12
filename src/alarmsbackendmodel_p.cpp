@@ -168,8 +168,16 @@ void AlarmsBackendModelPriv::alarmUpdated(AlarmObject *alarm)
 {
     int currentRow = alarms.indexOf(alarm);
 
+    // qLowerBounds expects that the list is sorted, we do not know if that is the case after
+    // the alarm has changed. Remove it temporarily from the list while calculating new row.
+    if (currentRow >= 0)
+        alarms.removeAt(currentRow);
+
     QList<AlarmObject*>::iterator it = qLowerBound(alarms.begin(), alarms.end(), alarm, alarmSort);
     int newRow = it - alarms.begin();
+
+    if (currentRow >= 0)
+        alarms.insert(currentRow, alarm);
 
     if (currentRow < 0) {
         alarm->setParent(this);
