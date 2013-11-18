@@ -81,6 +81,12 @@ AlarmObject::AlarmObject(const QMap<QString,QString> &data, QObject *parent)
         } else if (it.key() == "triggerTime") {
             m_countdown = true;
             m_triggerTime = it.value().toUInt();
+        } else if (it.key() == "startDate") {
+            m_startDate = QDateTime::fromString(it.value(), Qt::ISODate);
+        } else if (it.key() == "endDate") {
+            m_endDate = QDateTime::fromString(it.value(), Qt::ISODate);
+        } else if (it.key() == "uid") {
+            m_uid = it.value();
         }
     }
 
@@ -158,6 +164,43 @@ void AlarmObject::setCountdown(bool countdown)
 
     m_countdown = countdown;
     emit countdownChanged();
+    emit typeChanged();
+}
+
+int AlarmObject::type() const
+{
+    if (m_startDate.isValid() && m_endDate.isValid())
+        return Calendar;
+    else if (m_countdown)
+        return Countdown;
+    else
+        return Clock;
+}
+
+QDateTime AlarmObject::startDate() const
+{
+    return m_startDate;
+}
+
+QDateTime AlarmObject::endDate() const
+{
+    return m_endDate;
+}
+
+bool AlarmObject::allDay() const
+{
+    if (!m_startDate.isValid() || !m_endDate.isValid())
+        return false;
+
+    QTime start = m_startDate.time();
+    QTime end = m_endDate.time();
+
+    return start.minute() == 0 && start.hour() == 0 && start == end;
+}
+
+QString AlarmObject::calendarUid() const
+{
+    return m_uid;
 }
 
 void AlarmObject::reset()
