@@ -48,6 +48,9 @@ public:
     AlarmObject(QObject *parent = 0);
     AlarmObject(const QMap<QString,QString> &data, QObject *parent = 0);
 
+    enum Type { Calendar, Clock, Countdown };
+    Q_ENUMS(Type)
+
     /*!
      *  \qmlproperty string Alarm::title
      *
@@ -171,6 +174,58 @@ public:
     int getElapsed() const { return m_elapsed; }
 
     /*!
+      * \qmlproperty string Alarm::type
+      *
+      * Indicates the type of the alarm, possible values are Alarm::Clock, Alarm::Countdown,
+      * and Alarm::Calendar. Calendar alarms are read only, they cannot be added through this
+      * plugin, only read.
+      *
+      * \sa countdown
+      */
+    Q_PROPERTY(int type READ type NOTIFY typeChanged)
+    int type() const;
+
+    /*!
+      * \qmlproperty string Alarm::startDate
+      *
+      * The start date of an calendar event. Only valid for calendar alarms.
+      *
+      * \sa type
+      */
+    Q_PROPERTY(QDateTime startDate READ startDate CONSTANT)
+    QDateTime startDate() const;
+
+    /*!
+      * \qmlproperty string Alarm::endDate
+      *
+      * The end date of an calendar event. Only valid for calendar alarms.
+      *
+      * \sa type
+      */
+    Q_PROPERTY(QDateTime endDate READ endDate CONSTANT)
+    QDateTime endDate() const;
+
+    /*!
+      * \qmlproperty string Alarm::allDay
+      *
+      * Indicates if this alarm represents an all day event. Only valid for calendar alarms.
+      *
+      * \sa type
+      */
+    Q_PROPERTY(bool allDay READ allDay CONSTANT)
+    bool allDay() const;
+
+    /*!
+      * \qmlproperty string Alarm::calendarUid
+      *
+      * An unique identifier of a calendar event. Only valid for calendar alarms.
+      *
+      * \sa type
+      */
+    Q_PROPERTY(QString calendarUid READ calendarUid CONSTANT)
+    QString calendarUid() const;
+
+    /*!
      *  \qmlmethod void Alarm::reset()
      *
      *  If the alarm is a countdown alarm, then sets \a elapsed and \a triggerTime to 0.
@@ -208,6 +263,7 @@ signals:
     void countdownChanged();
     void triggerTimeChanged();
     void elapsedChanged();
+    void typeChanged();
 
     /*!
      *  \qmlsignal Alarm::updated()
@@ -248,6 +304,8 @@ protected:
     bool m_countdown;
     uint m_triggerTime;
     uint m_elapsed;
+    QDateTime m_startDate, m_endDate;
+    QString m_uid;
 
     // Timed
     unsigned m_cookie;
