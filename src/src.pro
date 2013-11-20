@@ -25,6 +25,7 @@ isEmpty(SRCDIR) SRCDIR = "."
 SOURCES += $$SRCDIR/plugin.cpp \
     $$SRCDIR/alarmsbackendmodel.cpp \
     $$SRCDIR/alarmsbackendmodel_p.cpp \
+    $$SRCDIR/enabledalarmsproxymodel.cpp \
     $$SRCDIR/alarmobject.cpp \
     $$SRCDIR/alarmhandlerinterface.cpp \
     $$SRCDIR/alarmdialogobject.cpp \
@@ -32,6 +33,7 @@ SOURCES += $$SRCDIR/plugin.cpp \
 
 HEADERS += $$SRCDIR/alarmsbackendmodel.h \
     $$SRCDIR/alarmsbackendmodel_p.h \
+    $$SRCDIR/enabledalarmsproxymodel.h \
     $$SRCDIR/alarmobject.h \
     $$SRCDIR/alarmhandlerinterface.h \
     $$SRCDIR/alarmdialogobject.h \
