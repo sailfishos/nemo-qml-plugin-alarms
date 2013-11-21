@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2012 Jolla Ltd.
- * Contact: John Brooks <john.brooks@jollamobile.com>
+ * Copyright (C) 2013 Jolla Ltd.
+ * Contact: Joona Petrell <joona.petrell@jollamobile.com>
  *
  * You may use this file under the terms of the BSD license as follows:
  *
@@ -30,60 +30,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
  */
 
-#include <QtGlobal>
+#ifndef ENABLEDALARMSPROXYMODEL_H
+#define ENABLEDALARMSPROXYMODEL_H
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-# include <QtQml>
-# include <QQmlEngine>
-# include <QQmlExtensionPlugin>
-# define QDeclarativeEngine QQmlEngine
-# define QDeclarativeExtensionPlugin QQmlExtensionPlugin
-#else
-# include <QtDeclarative>
-# include <QDeclarativeEngine>
-# include <QDeclarativeExtensionPlugin>
-#endif
+#include <QSortFilterProxyModel>
+#include <QtQml>
 
-#include "alarmsbackendmodel.h"
-#include "enabledalarmsproxymodel.h"
-#include "alarmobject.h"
-#include "alarmhandlerinterface.h"
-#include "alarmdialogobject.h"
-#include "interface.h"
-
-class Q_DECL_EXPORT NemoAlarmsPlugin : public QDeclarativeExtensionPlugin
+class EnabledAlarmsProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    Q_PLUGIN_METADATA(IID "org.nemomobile.alarms")
-#endif
+    Q_PROPERTY(QObject *model READ model WRITE setModel NOTIFY modelChanged)
+
 public:
-    NemoAlarmsPlugin()
-    {
-    }
+    EnabledAlarmsProxyModel(QObject *parent = 0);
 
-    virtual ~NemoAlarmsPlugin()
-    {
-    }
+    QObject *model() const;
+    void setModel(QObject *);
 
-    void initializeEngine(QDeclarativeEngine *engine, const char *uri)
-    {
-        Q_ASSERT(uri == QLatin1String("org.nemomobile.alarms"));
-    }
-
-    void registerTypes(const char *uri)
-    {
-        Q_ASSERT(uri == QLatin1String("org.nemomobile.alarms"));
-        qmlRegisterType<AlarmsBackendModel>(uri, 1, 0, "AlarmsModel");
-        qmlRegisterType<EnabledAlarmsProxyModel>(uri, 1, 0, "EnabledAlarmsProxyModel");
-        qmlRegisterUncreatableType<AlarmObject>(uri, 1, 0, "Alarm", "Create Alarm via AlarmsModel");
-        qmlRegisterType<AlarmHandlerInterface>(uri, 1, 0, "AlarmHandler");
-    }
+signals:
+    void modelChanged();
 };
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN2(nemoalarms, NemoAlarmsPlugin);
-#endif
+QML_DECLARE_TYPE(EnabledAlarmsProxyModel)
 
-#include "plugin.moc"
-
+#endif // ENABLEDALARMSPROXYMODEL_H

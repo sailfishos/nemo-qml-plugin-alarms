@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2012 Jolla Ltd.
- * Contact: John Brooks <john.brooks@jollamobile.com>
+ * Copyright (C) 2013 Jolla Ltd.
+ * Contact: Joona Petrell <joona.petrell@jollamobile.com>
  *
  * You may use this file under the terms of the BSD license as follows:
  *
@@ -30,60 +30,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
  */
 
-#include <QtGlobal>
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-# include <QtQml>
-# include <QQmlEngine>
-# include <QQmlExtensionPlugin>
-# define QDeclarativeEngine QQmlEngine
-# define QDeclarativeExtensionPlugin QQmlExtensionPlugin
-#else
-# include <QtDeclarative>
-# include <QDeclarativeEngine>
-# include <QDeclarativeExtensionPlugin>
-#endif
-
-#include "alarmsbackendmodel.h"
 #include "enabledalarmsproxymodel.h"
-#include "alarmobject.h"
-#include "alarmhandlerinterface.h"
-#include "alarmdialogobject.h"
-#include "interface.h"
+#include "alarmsbackendmodel.h"
+#include <qqmlinfo.h>
 
-class Q_DECL_EXPORT NemoAlarmsPlugin : public QDeclarativeExtensionPlugin
+EnabledAlarmsProxyModel::EnabledAlarmsProxyModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
-    Q_OBJECT
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    Q_PLUGIN_METADATA(IID "org.nemomobile.alarms")
-#endif
-public:
-    NemoAlarmsPlugin()
-    {
+    setFilterRole(AlarmsBackendModel::EnabledRole);
+    setFilterRegExp(QRegExp("true"));
+}
+
+QObject *EnabledAlarmsProxyModel::model() const
+{
+    return sourceModel();
+}
+
+void EnabledAlarmsProxyModel::setModel(QObject *model)
+{
+    if (model == sourceModel())
+        return;
+
+    AlarmsBackendModel *alarmModel = qobject_cast<AlarmsBackendModel*>(model);
+    if (model && !alarmModel) {
+        qmlInfo(this) << "EnabledAlarmsProxyModel expects a AlarmsBackendModel model type";
+        return;
     }
-
-    virtual ~NemoAlarmsPlugin()
-    {
-    }
-
-    void initializeEngine(QDeclarativeEngine *engine, const char *uri)
-    {
-        Q_ASSERT(uri == QLatin1String("org.nemomobile.alarms"));
-    }
-
-    void registerTypes(const char *uri)
-    {
-        Q_ASSERT(uri == QLatin1String("org.nemomobile.alarms"));
-        qmlRegisterType<AlarmsBackendModel>(uri, 1, 0, "AlarmsModel");
-        qmlRegisterType<EnabledAlarmsProxyModel>(uri, 1, 0, "EnabledAlarmsProxyModel");
-        qmlRegisterUncreatableType<AlarmObject>(uri, 1, 0, "Alarm", "Create Alarm via AlarmsModel");
-        qmlRegisterType<AlarmHandlerInterface>(uri, 1, 0, "AlarmHandler");
-    }
-};
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN2(nemoalarms, NemoAlarmsPlugin);
-#endif
-
-#include "plugin.moc"
-
+    setSourceModel(alarmModel);
+    emit modelChanged();
+}
