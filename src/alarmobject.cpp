@@ -155,6 +155,7 @@ void AlarmObject::setEnabled(bool enabled)
 
     m_enabled = enabled;
     emit enabledChanged();
+    emit updated();
 }
 
 void AlarmObject::setCountdown(bool countdown)
