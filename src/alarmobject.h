@@ -233,10 +233,32 @@ public:
       * the alarm is snoozed or dismissed by AlarmDialog::snooze() or
       * AlarmDialog::dismiss().
       *
+      * Can be used together with Alarm::maximalTimeoutSnoozeCount to
+      * determine if an alarm will be snoozed or dismissed when calling
+      * AlarmDialog::close()
+      *
       * \sa AlarmDialog::close()
+      * \sa Alarm::maximalTimeoutSnoozeCount
       */
     Q_PROPERTY(int timeoutSnoozeCounter READ timeoutSnoozeCounter CONSTANT)
     int timeoutSnoozeCounter() const { return static_cast<int>(m_timeoutSnoozeCounter); }
+
+    /*!
+      * \qmlproperty string Alarm::maximalTimeoutSnoozeCount
+      *
+      * Indicates how many times this alarm should be snoozed as a result of calling
+      * AlarmDialog::close(). A value of 0 indicates that calling AlarmDialog::close()
+      * will dismiss the alarm. A non-zero value n indicates that the alarm will be snoozed
+      * when Alarm::autoSnoozeCounter < n, and dismissed when Alarm::autoSnoozeCounter >= n.
+      *
+      * Default value is 0.
+      *
+      * \sa AlarmDialog::close()
+      * \sa Alarm::autoSnoozeCounter
+      */
+    Q_PROPERTY(int maximalTimeoutSnoozeCount READ maximalTimeoutSnoozeCount WRITE setMaximalTimeoutSnoozeCount NOTIFY maximalTimeoutSnoozeCountChanged)
+    int maximalTimeoutSnoozeCount() const;
+    void setMaximalTimeoutSnoozeCount(int count);
 
     /*!
      *  \qmlmethod void Alarm::reset()
@@ -277,6 +299,7 @@ signals:
     void triggerTimeChanged();
     void elapsedChanged();
     void typeChanged();
+    void maximalTimeoutSnoozeCountChanged();
 
     /*!
      *  \qmlsignal Alarm::updated()
@@ -323,6 +346,7 @@ protected:
     // Timed
     unsigned m_cookie;
     unsigned m_timeoutSnoozeCounter;
+    int m_maximalTimeoutSnoozeCount;
 };
 
 #endif
