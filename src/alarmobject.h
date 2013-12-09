@@ -226,6 +226,19 @@ public:
     QString calendarUid() const;
 
     /*!
+      * \qmlproperty string Alarm::autoSnoozeCounter
+      *
+      * Indicates how many times this alarm has been snoozed as a result of
+      * calling AlarmDialog::close(). This property will reset to 0 if
+      * the alarm is snoozed or dismissed by AlarmDialog::snooze() or
+      * AlarmDialog::dismiss().
+      *
+      * \sa AlarmDialog::close()
+      */
+    Q_PROPERTY(int timeoutSnoozeCounter READ timeoutSnoozeCounter CONSTANT)
+    int timeoutSnoozeCounter() const { return static_cast<int>(m_timeoutSnoozeCounter); }
+
+    /*!
      *  \qmlmethod void Alarm::reset()
      *
      *  If the alarm is a countdown alarm, then sets \a elapsed and \a triggerTime to 0.
@@ -309,6 +322,7 @@ protected:
 
     // Timed
     unsigned m_cookie;
+    unsigned m_timeoutSnoozeCounter;
 };
 
 #endif
