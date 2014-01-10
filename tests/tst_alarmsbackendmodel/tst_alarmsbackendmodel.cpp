@@ -78,6 +78,7 @@ void tst_AlarmsBackendModel::populated()
     QScopedPointer<AlarmsBackendModel> model(new AlarmsBackendModel);
     QCOMPARE(model->isPopulated(), false);
     QSignalSpy spy(model.data(), SIGNAL(populatedChanged()));
+    model->componentComplete();
     QTRY_COMPARE(model->isPopulated(), true);
     QCOMPARE(spy.count(), 1);
 }
@@ -85,6 +86,7 @@ void tst_AlarmsBackendModel::populated()
 void tst_AlarmsBackendModel::createAndDelete()
 {
     QScopedPointer<AlarmsBackendModel> model(new AlarmsBackendModel);
+    model->componentComplete();
     QTRY_COMPARE(model->isPopulated(), true);
 
     int oldRowCount = model->rowCount();
@@ -121,6 +123,7 @@ void tst_AlarmsBackendModel::createAndDelete()
     {
         QSignalSpy spy(alarm, SIGNAL(destroyed()));
         model.reset(new AlarmsBackendModel);
+        model->componentComplete();
         alarm = 0;
         QCOMPARE(spy.count(), 1);
     }
