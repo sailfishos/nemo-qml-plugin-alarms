@@ -45,7 +45,7 @@
 AlarmObject::AlarmObject(QObject *parent)
     : QObject(parent), m_hour(0), m_minute(0), m_enabled(false),
       m_createdDate(QDateTime::currentDateTime()), m_countdown(false), m_triggerTime(0),
-      m_elapsed(0), m_cookie(0)
+      m_elapsed(0), m_cookie(0), m_timeoutSnoozeCounter(0), m_maximalTimeoutSnoozeCount(0)
 {
 }
 
@@ -87,6 +87,10 @@ AlarmObject::AlarmObject(const QMap<QString,QString> &data, QObject *parent)
             m_endDate = QDateTime::fromString(it.value(), Qt::ISODate);
         } else if (it.key() == "uid") {
             m_uid = it.value();
+        } else if (it.key() == "timeoutSnoozeCounter") {
+            m_timeoutSnoozeCounter = it.value().toUInt();
+        } else if (it.key() == "maximalTimeoutSnoozeCounter") {
+            m_maximalTimeoutSnoozeCount = it.value().toInt();
         }
     }
 
@@ -204,6 +208,20 @@ QString AlarmObject::calendarUid() const
     return m_uid;
 }
 
+int AlarmObject::maximalTimeoutSnoozeCount() const
+{
+    return m_maximalTimeoutSnoozeCount;
+}
+
+void AlarmObject::setMaximalTimeoutSnoozeCount(int count)
+{
+    if (m_maximalTimeoutSnoozeCount == count)
+        return;
+
+    m_maximalTimeoutSnoozeCount = count;
+    emit maximalTimeoutSnoozeCountChanged();
+}
+
 void AlarmObject::reset()
 {
     if (!m_countdown)
@@ -233,6 +251,7 @@ void AlarmObject::save()
 
         if (!m_countdown) {
             ev.setBootFlag();
+            ev.setMaximalTimeoutSnoozeCounter(m_maximalTimeoutSnoozeCount);
 
             if (!m_daysOfWeek.isEmpty())
                 ev.setAttribute(QLatin1String("daysOfWeek"), m_daysOfWeek);
