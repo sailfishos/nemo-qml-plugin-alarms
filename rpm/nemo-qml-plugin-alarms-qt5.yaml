@@ -18,6 +18,8 @@ PkgConfigBR:
     - Qt5DBus
     - Qt5Test
     - timed-qt5 >= 2.67
+Requires:
+    - timed-qt5 >= 2.88
 Files:
     - "%{_libdir}/qt5/qml/org/nemomobile/alarms/libnemoalarms.so"
     - "%{_libdir}/qt5/qml/org/nemomobile/alarms/qmldir"
