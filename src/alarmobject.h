@@ -115,7 +115,7 @@ public:
      *  Internal identifier for the alarm. May change after modifications are saved.
      *  0 is an invalid ID, used for unsaved alarms.
      */
-    Q_PROPERTY(int id READ id NOTIFY idChanged);
+    Q_PROPERTY(int id READ id NOTIFY idChanged)
     int id() const { return static_cast<int>(m_cookie); }
 
     /*!
@@ -123,7 +123,7 @@ public:
      *
      *  Date when the alarm was first created
      */
-    Q_PROPERTY(QDateTime createdDate READ createdDate CONSTANT);
+    Q_PROPERTY(QDateTime createdDate READ createdDate CONSTANT)
     QDateTime createdDate() const { return m_createdDate; }
 
     /*!
