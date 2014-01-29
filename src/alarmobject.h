@@ -218,12 +218,22 @@ public:
     /*!
       * \qmlproperty string Alarm::calendarUid
       *
-      * An unique identifier of a calendar event. Only valid for calendar alarms.
+      * An unique identifier of a calendar event. Only valid for calendar alarms. Deprecated, use calendarEventUid instead.
       *
       * \sa type
       */
     Q_PROPERTY(QString calendarUid READ calendarUid CONSTANT)
     QString calendarUid() const;
+
+    /*!
+      * \qmlproperty string Alarm::calendarEventUid
+      *
+      * An unique identifier of a calendar event. Only valid for calendar alarms.
+      *
+      * \sa type
+      */
+    Q_PROPERTY(QString calendarEventUid READ calendarEventUid CONSTANT)
+    QString calendarEventUid() const;
 
     /*!
       * \qmlproperty string Alarm::autoSnoozeCounter
