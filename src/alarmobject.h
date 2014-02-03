@@ -115,7 +115,7 @@ public:
      *  Internal identifier for the alarm. May change after modifications are saved.
      *  0 is an invalid ID, used for unsaved alarms.
      */
-    Q_PROPERTY(int id READ id NOTIFY idChanged);
+    Q_PROPERTY(int id READ id NOTIFY idChanged)
     int id() const { return static_cast<int>(m_cookie); }
 
     /*!
@@ -123,7 +123,7 @@ public:
      *
      *  Date when the alarm was first created
      */
-    Q_PROPERTY(QDateTime createdDate READ createdDate CONSTANT);
+    Q_PROPERTY(QDateTime createdDate READ createdDate CONSTANT)
     QDateTime createdDate() const { return m_createdDate; }
 
     /*!
@@ -218,12 +218,22 @@ public:
     /*!
       * \qmlproperty string Alarm::calendarUid
       *
-      * An unique identifier of a calendar event. Only valid for calendar alarms.
+      * An unique identifier of a calendar event. Only valid for calendar alarms. Deprecated, use calendarEventUid instead.
       *
       * \sa type
       */
     Q_PROPERTY(QString calendarUid READ calendarUid CONSTANT)
     QString calendarUid() const;
+
+    /*!
+      * \qmlproperty string Alarm::calendarEventUid
+      *
+      * An unique identifier of a calendar event. Only valid for calendar alarms.
+      *
+      * \sa type
+      */
+    Q_PROPERTY(QString calendarEventUid READ calendarEventUid CONSTANT)
+    QString calendarEventUid() const;
 
     /*!
       * \qmlproperty string Alarm::autoSnoozeCounter

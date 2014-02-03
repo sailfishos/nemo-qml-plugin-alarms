@@ -208,6 +208,11 @@ QString AlarmObject::calendarUid() const
     return m_uid;
 }
 
+QString AlarmObject::calendarEventUid() const
+{
+    return m_uid;
+}
+
 int AlarmObject::maximalTimeoutSnoozeCount() const
 {
     return m_maximalTimeoutSnoozeCount;
