@@ -9,7 +9,7 @@ Name:       nemo-qml-plugin-alarms-qt5
 # << macros
 
 Summary:    Alarms plugin for Nemo Mobile
-Version:    0.0.0
+Version:    0.1.4
 Release:    1
 Group:      System/Libraries
 License:    BSD
