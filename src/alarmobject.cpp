@@ -82,9 +82,9 @@ AlarmObject::AlarmObject(const QMap<QString,QString> &data, QObject *parent)
             m_countdown = true;
             m_triggerTime = it.value().toUInt();
         } else if (it.key() == "startDate") {
-            m_startDate = parseIsoDate(it.value());
+            m_startDate = QDateTime::fromString(it.value(), Qt::ISODate);
         } else if (it.key() == "endDate") {
-            m_endDate = parseIsoDate(it.value());
+            m_endDate = QDateTime::fromString(it.value(), Qt::ISODate);
         } else if (it.key() == "uid") {
             m_uid = it.value();
         } else if (it.key() == "timeoutSnoozeCounter") {
@@ -360,9 +360,3 @@ void AlarmObject::deleteReply(QDBusPendingCallWatcher *w)
         qWarning() << "org.nemomobile.alarms: Cannot delete alarm from timed:" << reply.error();
 }
 
-QDateTime AlarmObject::parseIsoDate(const QString &isoDate)
-{
-    QDateTime tmp = QDateTime::fromString(isoDate, Qt::ISODate);
-    tmp.setTimeSpec(Qt::OffsetFromUTC); // Needed to not interpret TZ +00:00 as localtime
-    return tmp.toUTC().toLocalTime(); // toUtc() called because of QTBUG-29666
-}
