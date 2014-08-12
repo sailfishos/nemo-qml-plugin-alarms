@@ -337,9 +337,6 @@ signals:
      */
     void deleted();
 
-private:
-    QDateTime parseIsoDate(const QString &isoDate);
-
 private slots:
     void saveReply(QDBusPendingCallWatcher *w);
     void deleteReply(QDBusPendingCallWatcher *w);
