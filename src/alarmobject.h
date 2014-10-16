@@ -236,6 +236,16 @@ public:
     QString calendarEventUid() const;
 
     /*!
+      * \qmlproperty string Alarm::calendarEventRecurrenceId
+      *
+      * Recurrence identifier of a calendar event. Only valid for calendar alarms.
+      *
+      * \sa type
+      */
+    Q_PROPERTY(QString calendarEventRecurrenceId READ calendarEventRecurrenceId CONSTANT)
+    QString calendarEventRecurrenceId() const;
+
+    /*!
       * \qmlproperty string Alarm::autoSnoozeCounter
       *
       * Indicates how many times this alarm has been snoozed as a result of
@@ -352,6 +362,7 @@ protected:
     uint m_elapsed;
     QDateTime m_startDate, m_endDate;
     QString m_uid;
+    QString m_recurrenceId;
 
     // Timed
     unsigned m_cookie;
