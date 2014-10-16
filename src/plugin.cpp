@@ -32,17 +32,9 @@
 
 #include <QtGlobal>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-# include <QtQml>
-# include <QQmlEngine>
-# include <QQmlExtensionPlugin>
-# define QDeclarativeEngine QQmlEngine
-# define QDeclarativeExtensionPlugin QQmlExtensionPlugin
-#else
-# include <QtDeclarative>
-# include <QDeclarativeEngine>
-# include <QDeclarativeExtensionPlugin>
-#endif
+#include <QtQml>
+#include <QQmlEngine>
+#include <QQmlExtensionPlugin>
 
 #include "alarmsbackendmodel.h"
 #include "enabledalarmsproxymodel.h"
@@ -51,12 +43,11 @@
 #include "alarmdialogobject.h"
 #include "interface.h"
 
-class Q_DECL_EXPORT NemoAlarmsPlugin : public QDeclarativeExtensionPlugin
+class Q_DECL_EXPORT NemoAlarmsPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     Q_PLUGIN_METADATA(IID "org.nemomobile.alarms")
-#endif
+
 public:
     NemoAlarmsPlugin()
     {
@@ -66,7 +57,7 @@ public:
     {
     }
 
-    void initializeEngine(QDeclarativeEngine *engine, const char *uri)
+    void initializeEngine(QQmlEngine *engine, const char *uri)
     {
         Q_UNUSED(engine)
         Q_ASSERT(uri == QLatin1String("org.nemomobile.alarms"));
@@ -81,10 +72,6 @@ public:
         qmlRegisterType<AlarmHandlerInterface>(uri, 1, 0, "AlarmHandler");
     }
 };
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN2(nemoalarms, NemoAlarmsPlugin);
-#endif
 
 #include "plugin.moc"
 

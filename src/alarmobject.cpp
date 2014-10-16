@@ -34,13 +34,8 @@
 #include "interface.h"
 #include <QDBusPendingReply>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 # include <timed-qt5/event>
 # include <timed-qt5/exception>
-#else
-# include <timed/event>
-# include <timed/exception>
-#endif
 
 AlarmObject::AlarmObject(QObject *parent)
     : QObject(parent), m_hour(0), m_minute(0), m_enabled(false),

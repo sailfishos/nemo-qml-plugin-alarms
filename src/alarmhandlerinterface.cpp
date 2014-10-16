@@ -34,10 +34,6 @@
 #include "alarmdialogobject.h"
 #include <QTimer>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_DECLARE_METATYPE(QList<QObject *>)
-#endif
-
 AlarmHandlerInterface::AlarmHandlerInterface(QObject *parent)
     : QObject(parent),
       adaptor(new VolandAdaptor(this)),
