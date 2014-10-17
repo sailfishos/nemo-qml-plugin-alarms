@@ -87,6 +87,8 @@ AlarmObject::AlarmObject(const QMap<QString,QString> &data, QObject *parent)
             m_endDate = QDateTime::fromString(it.value(), Qt::ISODate);
         } else if (it.key() == "uid") {
             m_uid = it.value();
+        } else if (it.key() == "recurrenceId") {
+            m_recurrenceId = it.value();
         } else if (it.key() == "timeoutSnoozeCounter") {
             m_timeoutSnoozeCounter = it.value().toUInt();
         } else if (it.key() == "maximalTimeoutSnoozeCounter") {
@@ -211,6 +213,11 @@ QString AlarmObject::calendarUid() const
 QString AlarmObject::calendarEventUid() const
 {
     return m_uid;
+}
+
+QString AlarmObject::calendarEventRecurrenceId() const
+{
+    return m_recurrenceId;
 }
 
 int AlarmObject::maximalTimeoutSnoozeCount() const
