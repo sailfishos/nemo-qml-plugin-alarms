@@ -35,12 +35,7 @@
 #include "interface.h"
 #include <QDBusMessage>
 #include <QDBusReply>
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-# include <QQmlEngine>
-# define QDeclarativeEngine QQmlEngine
-#else
-# include <QDeclarativeEngine>
-#endif
+#include <QQmlEngine>
 #include <algorithm>
 
 inline static bool alarmSort(AlarmObject *a1, AlarmObject *a2)
@@ -181,7 +176,7 @@ void AlarmsBackendModelPriv::alarmUpdated(AlarmObject *alarm)
 
     if (currentRow < 0) {
         alarm->setParent(this);
-        QDeclarativeEngine::setObjectOwnership(alarm, QDeclarativeEngine::CppOwnership);
+        QQmlEngine::setObjectOwnership(alarm, QQmlEngine::CppOwnership);
 
         q->beginInsertRows(QModelIndex(), newRow, newRow);
         alarms.insert(newRow, alarm);

@@ -32,11 +32,7 @@
 
 #include "alarmdialogobject.h"
 #include "interface.h"
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-# include <timed-voland-qt5/reminder>
-#else
-# include <timed-voland/reminder>
-#endif
+#include <timed-voland-qt5/reminder>
 #include <QDBusPendingReply>
 #include <QDBusPendingCallWatcher>
 

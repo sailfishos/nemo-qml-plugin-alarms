@@ -1,11 +1,5 @@
-equals(QT_MAJOR_VERSION, 4) {
-    PACKAGENAME = nemo-qml-plugin-alarms
-    INSTALLLOCATION = /opt/tests/nemo-qml-plugins/alarms
-}
-equals(QT_MAJOR_VERSION, 5) {
-    PACKAGENAME = nemo-qml-plugin-alarms-qt5
-    INSTALLLOCATION = /opt/tests/nemo-qml-plugins-qt5/alarms
-}
+PACKAGENAME = nemo-qml-plugin-alarms-qt5
+INSTALLLOCATION = /opt/tests/nemo-qml-plugins-qt5/alarms
 
 TEMPLATE = subdirs
 SUBDIRS = tst_alarmsbackendmodel \
