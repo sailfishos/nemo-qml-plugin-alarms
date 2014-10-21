@@ -7,7 +7,6 @@ Group:      System/Libraries
 License:    BSD
 URL:        https://github.com/nemomobile/nemo-qml-plugin-alarms
 Source0:    %{name}-%{version}.tar.bz2
-Source100:  nemo-qml-plugin-alarms-qt5.yaml
 Requires:   timed-qt5 >= 2.88
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Gui)
