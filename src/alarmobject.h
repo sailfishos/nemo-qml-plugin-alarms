@@ -236,6 +236,17 @@ public:
     QString calendarEventUid() const;
 
     /*!
+      * \qmlproperty string Alarm::notebookUid
+      *
+      * An unique identifier of the notebook that a calendar event belongs to. Only valid for
+      * calendar alarms.
+      *
+      * \sa type
+      */
+    Q_PROPERTY(QString notebookUid READ notebookUid CONSTANT)
+    QString notebookUid() const;
+
+    /*!
       * \qmlproperty string Alarm::calendarEventRecurrenceId
       *
       * Recurrence identifier of a calendar event. Only valid for calendar alarms.
@@ -363,6 +374,7 @@ protected:
     QDateTime m_startDate, m_endDate;
     QString m_uid;
     QString m_recurrenceId;
+    QString m_notebookUid;
 
     // Timed
     unsigned m_cookie;
