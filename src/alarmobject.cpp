@@ -88,6 +88,8 @@ AlarmObject::AlarmObject(const QMap<QString,QString> &data, QObject *parent)
             m_timeoutSnoozeCounter = it.value().toUInt();
         } else if (it.key() == "maximalTimeoutSnoozeCounter") {
             m_maximalTimeoutSnoozeCount = it.value().toInt();
+        } else if (it.key() == "notebook") {
+            m_notebookUid = it.value();
         }
     }
 
@@ -208,6 +210,11 @@ QString AlarmObject::calendarUid() const
 QString AlarmObject::calendarEventUid() const
 {
     return m_uid;
+}
+
+QString AlarmObject::notebookUid() const
+{
+    return m_notebookUid;
 }
 
 QString AlarmObject::calendarEventRecurrenceId() const
