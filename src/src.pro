@@ -3,7 +3,8 @@ PLUGIN_IMPORT_PATH = org/nemomobile/alarms
 
 TEMPLATE = lib
 CONFIG += qt plugin hide_symbols
-QT += qml quick dbus
+QT -= gui
+QT += qml dbus
 
 target.path = $$[QT_INSTALL_QML]/$$PLUGIN_IMPORT_PATH
 INSTALLS += target

@@ -9,9 +9,7 @@ URL:        https://github.com/nemomobile/nemo-qml-plugin-alarms
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   timed-qt5 >= 2.88
 BuildRequires:  pkgconfig(Qt5Core)
-BuildRequires:  pkgconfig(Qt5Gui)
 BuildRequires:  pkgconfig(Qt5Qml)
-BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  pkgconfig(Qt5DBus)
 BuildRequires:  pkgconfig(Qt5Test)
 BuildRequires:  pkgconfig(timed-qt5) >= 2.67
