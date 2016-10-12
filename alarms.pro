@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
 SUBDIRS = src tests
-OTHER_FILES += rpm/*.spec rpm/*.yaml
+OTHER_FILES += rpm/*.spec
