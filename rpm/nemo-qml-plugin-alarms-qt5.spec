@@ -42,6 +42,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%dir %{_libdir}/qt5/qml/org/nemomobile/alarms
 %{_libdir}/qt5/qml/org/nemomobile/alarms/libnemoalarms.so
 %{_libdir}/qt5/qml/org/nemomobile/alarms/qmldir
 
