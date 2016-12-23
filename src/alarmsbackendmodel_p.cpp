@@ -89,7 +89,7 @@ void AlarmsBackendModelPriv::queryReply(QDBusPendingCallWatcher *call)
     call->deleteLater();
 
     if (reply.isError()) {
-        qWarning() << "org.nemomobile.alarms: Timed query failed:" << reply.error();
+        qWarning() << "Nemo.Alarms: Timed query failed:" << reply.error();
         return;
     }
 
@@ -112,7 +112,7 @@ void AlarmsBackendModelPriv::attributesReply(QDBusPendingCallWatcher *call)
     call->deleteLater();
 
     if (reply.isError()) {
-        qWarning() << "org.nemomobile.alarms: Timed attributes query failed:" << reply.error();
+        qWarning() << "Nemo.Alarms: Timed attributes query failed:" << reply.error();
         return;
     }
 

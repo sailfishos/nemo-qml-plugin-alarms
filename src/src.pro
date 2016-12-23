@@ -1,5 +1,5 @@
 TARGET = nemoalarms
-PLUGIN_IMPORT_PATH = org/nemomobile/alarms
+PLUGIN_IMPORT_PATH = Nemo/Alarms
 
 TEMPLATE = lib
 CONFIG += qt plugin hide_symbols

@@ -325,7 +325,7 @@ void AlarmObject::save()
         // Emit the updated signal immediately to update UI
         emit updated();
     } catch (Maemo::Timed::Exception &e) {
-        qWarning() << "org.nemomobile.alarms: Cannot sync alarm to timed:" << e.what();
+        qWarning() << "Nemo.Alarms: Cannot sync alarm to timed:" << e.what();
     }
 }
 
@@ -335,7 +335,7 @@ void AlarmObject::saveReply(QDBusPendingCallWatcher *w)
     w->deleteLater();
 
     if (reply.isError()) {
-        qWarning() << "org.nemomobile.alarms: Cannot sync alarm to timed:" << reply.error();
+        qWarning() << "Nemo.Alarms: Cannot sync alarm to timed:" << reply.error();
         return;
     }
 
@@ -366,6 +366,6 @@ void AlarmObject::deleteReply(QDBusPendingCallWatcher *w)
     w->deleteLater();
 
     if (reply.isError())
-        qWarning() << "org.nemomobile.alarms: Cannot delete alarm from timed:" << reply.error();
+        qWarning() << "Nemo.Alarms: Cannot delete alarm from timed:" << reply.error();
 }
 
