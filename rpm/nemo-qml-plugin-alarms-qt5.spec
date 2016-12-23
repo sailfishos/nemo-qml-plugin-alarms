@@ -38,8 +38,18 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 %qmake5_install
 
+# org.nemomobile.alarms legacy import
+mkdir -p %{buildroot}%{_libdir}/qt5/qml/org/nemomobile/alarms/
+ln -sf %{_libdir}/qt5/qml/Nemo/Alarms/libnemoalarms.so %{buildroot}%{_libdir}/qt5/qml/org/nemomobile/alarms/
+sed 's/Nemo.Alarms/org.nemomobile.alarms/' < src/qmldir > %{buildroot}%{_libdir}/qt5/qml/org/nemomobile/alarms/qmldir
+
 %files
 %defattr(-,root,root,-)
+%dir %{_libdir}/qt5/qml/Nemo/Alarms
+%{_libdir}/qt5/qml/Nemo/Alarms/libnemoalarms.so
+%{_libdir}/qt5/qml/Nemo/Alarms/qmldir
+
+# org.nemomobile.alarms legacy import
 %dir %{_libdir}/qt5/qml/org/nemomobile/alarms
 %{_libdir}/qt5/qml/org/nemomobile/alarms/libnemoalarms.so
 %{_libdir}/qt5/qml/org/nemomobile/alarms/qmldir

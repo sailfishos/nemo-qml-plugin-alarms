@@ -88,6 +88,6 @@ void AlarmDialogObject::responseReply(QDBusPendingCallWatcher *w)
     w->deleteLater();
 
     if (reply.isError())
-        qWarning() << "org.nemomobile.alarms: Error from sending alarm dialog response:" << reply.error();
+        qWarning() << "Nemo.Alarms: Error from sending alarm dialog response:" << reply.error();
 }
 

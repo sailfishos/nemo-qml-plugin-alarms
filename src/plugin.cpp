@@ -46,7 +46,7 @@
 class Q_DECL_EXPORT NemoAlarmsPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.nemomobile.alarms")
+    Q_PLUGIN_METADATA(IID "Nemo.Alarms")
 
 public:
     NemoAlarmsPlugin()
@@ -60,12 +60,12 @@ public:
     void initializeEngine(QQmlEngine *engine, const char *uri)
     {
         Q_UNUSED(engine)
-        Q_ASSERT(uri == QLatin1String("org.nemomobile.alarms"));
+        Q_ASSERT(uri == QLatin1String("Nemo.Alarms") || uri == QLatin1String("org.nemomobile.alarms"));
     }
 
     void registerTypes(const char *uri)
     {
-        Q_ASSERT(uri == QLatin1String("org.nemomobile.alarms"));
+        Q_ASSERT(uri == QLatin1String("Nemo.Alarms") || uri == QLatin1String("org.nemomobile.alarms"));
         qmlRegisterType<AlarmsBackendModel>(uri, 1, 0, "AlarmsModel");
         qmlRegisterType<EnabledAlarmsProxyModel>(uri, 1, 0, "EnabledAlarmsProxyModel");
         qmlRegisterUncreatableType<AlarmObject>(uri, 1, 0, "Alarm", "Create Alarm via AlarmsModel");

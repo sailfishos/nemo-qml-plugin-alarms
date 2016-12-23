@@ -53,13 +53,13 @@ void AlarmHandlerInterface::setupInterface()
     QDBusConnection bus = Maemo::Timed::Voland::bus();
     if (!bus.registerService(Maemo::Timed::Voland::service())) {
 #endif
-        qWarning() << "org.nemomobile.alarms: Cannot register voland service for AlarmHandler";
+        qWarning() << "Nemo.Alarms: Cannot register voland service for AlarmHandler";
         emit error(QLatin1String("Cannot register alarm handler service"));
         return;
     }
 
     if (!bus.registerObject(Maemo::Timed::Voland::objpath(), this)) {
-        qWarning() << "org.nemomobile.alarms: Cannot register voland object for AlarmHandler";
+        qWarning() << "Nemo.Alarms: Cannot register voland object for AlarmHandler";
         emit error(QLatin1String("Cannot register alarm handler object"));
         return;
     }
@@ -172,13 +172,13 @@ void VolandSignalWrapper::setupInterface()
 {
     QDBusConnection signalBus = QDBusConnection::systemBus();
     if (!signalBus.registerService("com.nokia.voland.signal")) {
-        qWarning() << "org.nemomobile.alarms: Cannot register voland signal serivce for AlarmHandler";
+        qWarning() << "Nemo.Alarms: Cannot register voland signal serivce for AlarmHandler";
         emit error(QLatin1String("Cannot register alarm handler signal service"));
         return;
     }
 
     if (!signalBus.registerObject("/com/nokia/voland/signal", this)) {
-        qWarning() << "org.nemomobile.alarms: Cannot register voland signal object for AlarmHandler";
+        qWarning() << "Nemo.Alarms: Cannot register voland signal object for AlarmHandler";
         emit error(QLatin1String("Cannot register alarm handler signal object"));
         return;
     }

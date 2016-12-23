@@ -1,2 +1,2 @@
-module org.nemomobile.alarms
+module Nemo.Alarms
 plugin nemoalarms
