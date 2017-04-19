@@ -47,20 +47,23 @@ void AlarmHandlerInterface::setupInterface()
 {
 #ifdef USE_VOLAND_TEST_INTERFACE
     QDBusConnection bus = QDBusConnection::sessionBus();
-
-    if (!bus.registerService("org.nemomobile.alarms.test.voland")) {
 #else
     QDBusConnection bus = Maemo::Timed::Voland::bus();
-    if (!bus.registerService(Maemo::Timed::Voland::service())) {
 #endif
-        qWarning() << "Nemo.Alarms: Cannot register voland service for AlarmHandler";
-        emit error(QLatin1String("Cannot register alarm handler service"));
-        return;
-    }
-
     if (!bus.registerObject(Maemo::Timed::Voland::objpath(), this)) {
         qWarning() << "Nemo.Alarms: Cannot register voland object for AlarmHandler";
         emit error(QLatin1String("Cannot register alarm handler object"));
+        return;
+    }
+
+#ifdef USE_VOLAND_TEST_INTERFACE
+    QString serviceName("org.nemomobile.alarms.test.voland");
+#else
+    QString serviceName(Maemo::Timed::Voland::service());
+#endif
+    if (!bus.registerService(serviceName)) {
+        qWarning() << "Nemo.Alarms: Cannot register voland service for AlarmHandler";
+        emit error(QLatin1String("Cannot register alarm handler service"));
         return;
     }
 
@@ -171,15 +174,15 @@ VolandSignalWrapper::VolandSignalWrapper(QObject *parent) : QObject(parent)
 void VolandSignalWrapper::setupInterface()
 {
     QDBusConnection signalBus = QDBusConnection::systemBus();
-    if (!signalBus.registerService("com.nokia.voland.signal")) {
-        qWarning() << "Nemo.Alarms: Cannot register voland signal serivce for AlarmHandler";
-        emit error(QLatin1String("Cannot register alarm handler signal service"));
-        return;
-    }
-
     if (!signalBus.registerObject("/com/nokia/voland/signal", this)) {
         qWarning() << "Nemo.Alarms: Cannot register voland signal object for AlarmHandler";
         emit error(QLatin1String("Cannot register alarm handler signal object"));
+        return;
+    }
+
+    if (!signalBus.registerService("com.nokia.voland.signal")) {
+        qWarning() << "Nemo.Alarms: Cannot register voland signal serivce for AlarmHandler";
+        emit error(QLatin1String("Cannot register alarm handler signal service"));
         return;
     }
 }
