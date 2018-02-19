@@ -93,6 +93,8 @@ void AlarmsBackendModelPriv::queryReply(QDBusPendingCallWatcher *call)
         return;
     }
 
+    qDBusRegisterMetaType< QList<uint> >();
+
     QList<uint> cookies;
     foreach (QVariant v, reply.value())
         cookies.append(v.toUInt());
