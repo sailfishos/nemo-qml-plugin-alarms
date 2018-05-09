@@ -47,6 +47,7 @@ sed 's/Nemo.Alarms/org.nemomobile.alarms/' < src/qmldir > %{buildroot}%{_libdir}
 %defattr(-,root,root,-)
 %dir %{_libdir}/qt5/qml/Nemo/Alarms
 %{_libdir}/qt5/qml/Nemo/Alarms/libnemoalarms.so
+%{_libdir}/qt5/qml/Nemo/Alarms/plugins.qmltypes
 %{_libdir}/qt5/qml/Nemo/Alarms/qmldir
 
 # org.nemomobile.alarms legacy import
