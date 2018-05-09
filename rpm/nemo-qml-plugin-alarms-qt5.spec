@@ -5,7 +5,7 @@ Version:    0.1.5
 Release:    1
 Group:      System/Libraries
 License:    BSD
-URL:        https://github.com/nemomobile/nemo-qml-plugin-alarms
+URL:        https://git.merproject.org/mer-core/nemo-qml-plugin-alarms
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   timed-qt5 >= 2.88
 BuildRequires:  pkgconfig(Qt5Core)
