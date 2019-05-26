@@ -39,6 +39,7 @@
 #include "alarmsbackendmodel.h"
 #include "enabledalarmsproxymodel.h"
 #include "alarmobject.h"
+#include "alarmsettings.h"
 #include "alarmhandlerinterface.h"
 #include "alarmdialogobject.h"
 #include "interface.h"
@@ -70,6 +71,7 @@ public:
         qmlRegisterType<EnabledAlarmsProxyModel>(uri, 1, 0, "EnabledAlarmsProxyModel");
         qmlRegisterUncreatableType<AlarmObject>(uri, 1, 0, "Alarm", "Create Alarm via AlarmsModel");
         qmlRegisterType<AlarmHandlerInterface>(uri, 1, 0, "AlarmHandler");
+        qmlRegisterType<AlarmSettings>(uri, 1, 0, "AlarmSettings");
     }
 };
 
