@@ -21,6 +21,12 @@ PKGCONFIG += timed-qt5 timed-voland-qt5
 
 isEmpty(SRCDIR) SRCDIR = "."
 
+# D-Bus interfaces
+timed.files = $$SRCDIR/com.nokia.time.xml
+timed.header_flags = -N -c TimeDaemon
+timed.source_flags = -N -c TimeDaemon
+DBUS_INTERFACES += timed
+
 SOURCES += $$SRCDIR/plugin.cpp \
     $$SRCDIR/alarmsbackendmodel.cpp \
     $$SRCDIR/alarmsbackendmodel_p.cpp \
@@ -28,6 +34,7 @@ SOURCES += $$SRCDIR/plugin.cpp \
     $$SRCDIR/alarmobject.cpp \
     $$SRCDIR/alarmhandlerinterface.cpp \
     $$SRCDIR/alarmdialogobject.cpp \
+    $$SRCDIR/alarmsettings.cpp \
     $$SRCDIR/interface.cpp
 
 HEADERS += $$SRCDIR/alarmsbackendmodel.h \
@@ -36,4 +43,5 @@ HEADERS += $$SRCDIR/alarmsbackendmodel.h \
     $$SRCDIR/alarmobject.h \
     $$SRCDIR/alarmhandlerinterface.h \
     $$SRCDIR/alarmdialogobject.h \
+    $$SRCDIR/alarmsettings.h \
     $$SRCDIR/interface.h
