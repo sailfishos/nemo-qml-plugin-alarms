@@ -48,7 +48,7 @@ public:
     AlarmObject(QObject *parent = 0);
     AlarmObject(const QMap<QString,QString> &data, QObject *parent = 0);
 
-    enum Type { Calendar, Clock, Countdown };
+    enum Type { Calendar, Clock, Countdown, Reminder };
     Q_ENUMS(Type)
 
     /*!
@@ -257,6 +257,16 @@ public:
     QString calendarEventRecurrenceId() const;
 
     /*!
+      * \qmlproperty string Alarm::calendarEventRecurrenceId
+      *
+      * Recurrence identifier of a calendar event. Only valid for calendar alarms.
+      *
+      * \sa type
+      */
+    Q_PROPERTY(QString phoneNumber READ phoneNumber CONSTANT)
+    QString phoneNumber() const { return m_phoneNumber; }
+
+    /*!
       * \qmlproperty string Alarm::autoSnoozeCounter
       *
       * Indicates how many times this alarm has been snoozed as a result of
@@ -369,12 +379,14 @@ protected:
     bool m_enabled;
     QDateTime m_createdDate;
     bool m_countdown;
+    bool m_reminder;
     uint m_triggerTime;
     uint m_elapsed;
     QDateTime m_startDate, m_endDate;
     QString m_uid;
     QString m_recurrenceId;
     QString m_notebookUid;
+    QString m_phoneNumber;
 
     // Timed
     unsigned m_cookie;

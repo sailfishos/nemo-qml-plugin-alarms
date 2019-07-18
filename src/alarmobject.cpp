@@ -39,14 +39,14 @@
 
 AlarmObject::AlarmObject(QObject *parent)
     : QObject(parent), m_hour(0), m_minute(0), m_enabled(false),
-      m_createdDate(QDateTime::currentDateTime()), m_countdown(false), m_triggerTime(0),
+      m_createdDate(QDateTime::currentDateTime()), m_countdown(false), m_reminder(false), m_triggerTime(0),
       m_elapsed(0), m_cookie(0), m_timeoutSnoozeCounter(0), m_maximalTimeoutSnoozeCount(0)
 {
 }
 
 AlarmObject::AlarmObject(const QMap<QString,QString> &data, QObject *parent)
     : QObject(parent), m_hour(0), m_minute(0), m_enabled(false),
-      m_createdDate(QDateTime::currentDateTime()), m_countdown(false), m_triggerTime(0),
+      m_createdDate(QDateTime::currentDateTime()), m_countdown(false), m_reminder(false), m_triggerTime(0),
       m_elapsed(0), m_cookie(0)
 {
     for (QMap<QString,QString>::ConstIterator it = data.begin(); it != data.end(); it++) {
@@ -90,6 +90,10 @@ AlarmObject::AlarmObject(const QMap<QString,QString> &data, QObject *parent)
             m_maximalTimeoutSnoozeCount = it.value().toInt();
         } else if (it.key() == "notebook") {
             m_notebookUid = it.value();
+        } else if (it.key() == QLatin1String("phoneNumber")) {
+            m_phoneNumber = it.value();
+        } else if (it.key() == QLatin1String("type") && it.value() == QLatin1String("reminder")) {
+            m_reminder = true;
         }
     }
 
@@ -173,7 +177,9 @@ void AlarmObject::setCountdown(bool countdown)
 
 int AlarmObject::type() const
 {
-    if (m_startDate.isValid() && m_endDate.isValid())
+    if (m_reminder)
+        return Reminder;
+    else if (m_startDate.isValid() && m_endDate.isValid())
         return Calendar;
     else if (m_countdown)
         return Countdown;
