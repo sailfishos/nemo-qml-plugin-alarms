@@ -49,6 +49,7 @@ public:
 
     AlarmsBackendModelPriv(AlarmsBackendModel *q);
     void populate();
+    void reset();
 
 public slots:
     void alarmUpdated();

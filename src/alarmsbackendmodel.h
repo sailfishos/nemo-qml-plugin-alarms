@@ -84,6 +84,20 @@ public:
     void classBegin();
     void componentComplete();
 
+
+    /*!
+     *  \qmlmethod void AlarmsModel::reset()
+     *
+     *  Goes through and resets alarms saved in the model. Active alarms
+     *  will be turned off, i.e. enabled set to false.
+     *
+     *  If the alarm is a countdown alarm, then sets \a elapsed and \a triggerTime to 0.
+     *  If the alarm is not a countdown alarm, then does nothing.
+     *
+     *  \sa Alarm::reset()
+     */
+    Q_INVOKABLE void reset();
+
 signals:
     void populatedChanged();
     void onlyCountdownChanged();
