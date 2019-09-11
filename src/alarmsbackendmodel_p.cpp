@@ -211,3 +211,13 @@ void AlarmsBackendModelPriv::alarmDeleted(AlarmObject *alarm)
     alarm->deleteLater();
 }
 
+void AlarmsBackendModelPriv::reset()
+{
+    foreach (AlarmObject *alarm, alarms) {
+        if (alarm->type() == AlarmObject::Countdown) {
+            alarm->setEnabled(false);
+            alarm->reset();
+            alarm->save();
+        }
+    }
+}

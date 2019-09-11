@@ -122,3 +122,8 @@ void AlarmsBackendModel::componentComplete()
     completed = true;
 }
 
+void AlarmsBackendModel::reset()
+{
+    priv->reset();
+}
+
