@@ -49,6 +49,7 @@ public:
         EnabledRole,
         HourRole,
         MinuteRole,
+        SecondRole,
         WeekDaysRole
     };
 
