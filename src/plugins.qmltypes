@@ -39,12 +39,14 @@ Module {
             values: {
                 "Calendar": 0,
                 "Clock": 1,
-                "Countdown": 2
+                "Countdown": 2,
+                "Reminder": 3
             }
         }
         Property { name: "title"; type: "string" }
         Property { name: "hour"; type: "int" }
         Property { name: "minute"; type: "int" }
+        Property { name: "second"; type: "int" }
         Property { name: "daysOfWeek"; type: "string" }
         Property { name: "enabled"; type: "bool" }
         Property { name: "id"; type: "int"; isReadonly: true }
@@ -60,6 +62,7 @@ Module {
         Property { name: "calendarEventUid"; type: "string"; isReadonly: true }
         Property { name: "notebookUid"; type: "string"; isReadonly: true }
         Property { name: "calendarEventRecurrenceId"; type: "string"; isReadonly: true }
+        Property { name: "phoneNumber"; type: "string"; isReadonly: true }
         Property { name: "timeoutSnoozeCounter"; type: "int"; isReadonly: true }
         Property { name: "maximalTimeoutSnoozeCount"; type: "int" }
         Signal { name: "timeChanged" }
@@ -94,6 +97,7 @@ Module {
         Property { name: "populated"; type: "bool"; isReadonly: true }
         Property { name: "onlyCountdown"; type: "bool" }
         Method { name: "createAlarm"; type: "AlarmObject*" }
+        Method { name: "reset" }
     }
     Component {
         name: "EnabledAlarmsProxyModel"
