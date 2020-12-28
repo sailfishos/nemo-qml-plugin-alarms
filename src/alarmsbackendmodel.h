@@ -42,6 +42,8 @@ class AlarmObject;
 class AlarmsBackendModel : public QAbstractListModel, public QQmlParserStatus
 {
     Q_OBJECT
+    Q_PROPERTY(bool populated READ isPopulated NOTIFY populatedChanged)
+    Q_PROPERTY(bool onlyCountdown READ isOnlyCountdown WRITE setOnlyCountdown NOTIFY onlyCountdownChanged)
 
 public:
     enum {
@@ -56,26 +58,9 @@ public:
     AlarmsBackendModel(QObject *parent = 0);
     virtual ~AlarmsBackendModel();
 
-    /*!
-     *  \qmlmethod Alarm AlarmsModel::createAlarm
-     *
-     *  Create a new alarm object. After setting properties, call the save()
-     *  method of the object to commit it to the backend and model.
-     *
-     *  If the operation is aborted, call the deleteAlarm() method of the object.
-     */
     Q_INVOKABLE AlarmObject *createAlarm();
-
-    /*!
-     *  \qmlproperty bool AlarmsModel::populated
-     *
-     *  True when the model has loaded all available alarms from the backend.
-     *  The model may still be empty afterwards.
-     */
-    Q_PROPERTY(bool populated READ isPopulated NOTIFY populatedChanged)
     bool isPopulated() const;
 
-    Q_PROPERTY(bool onlyCountdown READ isOnlyCountdown WRITE setOnlyCountdown NOTIFY onlyCountdownChanged)
     bool isOnlyCountdown() const;
     void setOnlyCountdown(bool countdown);
 
@@ -85,18 +70,6 @@ public:
     void classBegin();
     void componentComplete();
 
-
-    /*!
-     *  \qmlmethod void AlarmsModel::reset()
-     *
-     *  Goes through and resets alarms saved in the model. Active alarms
-     *  will be turned off, i.e. enabled set to false.
-     *
-     *  If the alarm is a countdown alarm, then sets \a elapsed and \a triggerTime to 0.
-     *  If the alarm is not a countdown alarm, then does nothing.
-     *
-     *  \sa Alarm::reset()
-     */
     Q_INVOKABLE void reset();
 
 signals:

@@ -53,45 +53,19 @@ namespace Maemo {
 class AlarmHandlerInterface : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QList<QObject*> activeDialogs READ activeDialogs NOTIFY activeDialogsChanged)
+    Q_PROPERTY(bool dialogOnScreen READ dialogOnScreen WRITE setDialogOnScreen NOTIFY dialogOnScreenChanged)
 
 public:
     AlarmHandlerInterface(QObject *parent = 0);
 
+    QList<QObject*> activeDialogs() const;
 
-    /*!
-     *  \qmlproperty QList<Object *> AlarmHandler::activeDialogs
-     *
-     *  A list of \a AlarmDialogObject instances for active alarm dialogs.
-     */
-    Q_PROPERTY(QList<QObject *>  activeDialogs READ activeDialogs NOTIFY activeDialogsChanged)
-    QList<QObject *> activeDialogs() const;
-
-    /*!
-     *  \qmlproperty bool AlarmHandler::dialogOnScreen
-     *
-     *  A property that the application importing AlarmHandler uses to indicate
-     *  when an alarm dialog is displayed. Setting this property to true tells
-     *  DSME that the device display should be turned on, setting to false indicates
-     *  that the display may be turned off.
-     */
-    Q_PROPERTY(bool dialogOnScreen READ dialogOnScreen WRITE setDialogOnScreen NOTIFY dialogOnScreenChanged)
     bool dialogOnScreen();
     void setDialogOnScreen(bool onScreen);
 
 signals:
-    /*!
-     *  \qmlsignal void AlarmHandler::alarmReady(AlarmDialog alarm)
-     *
-     *  Emitted when an alarm has triggered and should be displayed. The alarm
-     *  object contains properties and actions for the alarm.
-     */
     void alarmReady(QObject *alarm);
-
-    /*!
-     *  \qmlsignal void AlarmHandler::error(string message)
-     *
-     *  Emitted when the alarm handler interface cannot be registered.
-     */
     void error(const QString &message);
 
     void activeDialogsChanged();
