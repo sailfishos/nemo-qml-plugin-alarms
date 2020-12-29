@@ -57,6 +57,14 @@ QHash<int, QByteArray> AlarmsBackendModel::roleNames() const
     return roles;
 }
 
+/*!
+ *  \qmlmethod Alarm AlarmsModel::createAlarm
+ *
+ *  Create a new alarm object. After setting properties, call the save()
+ *  method of the object to commit it to the backend and model.
+ *
+ *  If the operation is aborted, call the deleteAlarm() method of the object.
+ */
 AlarmObject *AlarmsBackendModel::createAlarm()
 {
     AlarmObject *alarm = new AlarmObject(this);
@@ -65,6 +73,12 @@ AlarmObject *AlarmsBackendModel::createAlarm()
     return alarm;
 }
 
+/*!
+ *  \qmlproperty bool AlarmsModel::populated
+ *
+ *  True when the model has loaded all available alarms from the backend.
+ *  The model may still be empty afterwards.
+ */
 bool AlarmsBackendModel::isPopulated() const
 {
     return priv->populated;
@@ -124,6 +138,17 @@ void AlarmsBackendModel::componentComplete()
     completed = true;
 }
 
+/*!
+ *  \qmlmethod void AlarmsModel::reset()
+ *
+ *  Goes through and resets alarms saved in the model. Active alarms
+ *  will be turned off, i.e. enabled set to false.
+ *
+ *  If the alarm is a countdown alarm, then sets \a elapsed and \a triggerTime to 0.
+ *  If the alarm is not a countdown alarm, then does nothing.
+ *
+ *  \sa Alarm::reset()
+ */
 void AlarmsBackendModel::reset()
 {
     priv->reset();

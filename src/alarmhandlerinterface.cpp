@@ -34,6 +34,19 @@
 #include "alarmdialogobject.h"
 #include <QTimer>
 
+/*!
+ *  \qmlsignal void AlarmHandler::alarmReady(AlarmDialog alarm)
+ *
+ *  Emitted when an alarm has triggered and should be displayed. The alarm
+ *  object contains properties and actions for the alarm.
+ */
+
+/*!
+ *  \qmlsignal void AlarmHandler::error(string message)
+ *
+ *  Emitted when the alarm handler interface cannot be registered.
+ */
+
 AlarmHandlerInterface::AlarmHandlerInterface(QObject *parent)
     : QObject(parent),
       adaptor(new VolandAdaptor(this)),
@@ -132,6 +145,11 @@ void AlarmHandlerInterface::dialogClosed(QObject *obj)
     emit activeDialogsChanged();
 }
 
+/*!
+ *  \qmlproperty list<QtObject> AlarmHandler::activeDialogs
+ *
+ *  A list of \a AlarmDialogObject instances for active alarm dialogs.
+ */
 QList<QObject *> AlarmHandlerInterface::activeDialogs() const
 {
     QList<QObject *> re;
@@ -141,6 +159,14 @@ QList<QObject *> AlarmHandlerInterface::activeDialogs() const
     return re;
 }
 
+/*!
+ *  \qmlproperty bool AlarmHandler::dialogOnScreen
+ *
+ *  A property that the application importing AlarmHandler uses to indicate
+ *  when an alarm dialog is displayed. Setting this property to true tells
+ *  DSME that the device display should be turned on, setting to false indicates
+ *  that the display may be turned off.
+ */
 bool AlarmHandlerInterface::dialogOnScreen()
 {
     return m_dialogOnScreen;
@@ -181,7 +207,7 @@ void VolandSignalWrapper::setupInterface()
     }
 
     if (!signalBus.registerService("com.nokia.voland.signal")) {
-        qWarning() << "Nemo.Alarms: Cannot register voland signal serivce for AlarmHandler";
+        qWarning() << "Nemo.Alarms: Cannot register voland signal service for AlarmHandler";
         emit error(QLatin1String("Cannot register alarm handler signal service"));
         return;
     }
