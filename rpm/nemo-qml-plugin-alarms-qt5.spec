@@ -1,11 +1,10 @@
 Name:       nemo-qml-plugin-alarms-qt5
 
 Summary:    Alarms plugin for Nemo Mobile
-Version:    0.1.5
+Version:    0.3.11
 Release:    1
-Group:      System/Libraries
 License:    BSD
-URL:        https://git.merproject.org/mer-core/nemo-qml-plugin-alarms
+URL:        https://github.com/sailfishos/nemo-qml-plugin-alarms
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   timed-qt5 >= 2.88
 BuildRequires:  pkgconfig(Qt5Core)
@@ -19,7 +18,6 @@ BuildRequires:  pkgconfig(timed-qt5) >= 2.67
 
 %package tests
 Summary:    QML alarms plugin tests
-Group:      System/Libraries
 Requires:   %{name} = %{version}-%{release}
 
 %description tests
@@ -35,7 +33,6 @@ Requires:   %{name} = %{version}-%{release}
 make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
 %qmake5_install
 
 # org.nemomobile.alarms legacy import
@@ -45,6 +42,7 @@ sed 's/Nemo.Alarms/org.nemomobile.alarms/' < src/qmldir > %{buildroot}%{_libdir}
 
 %files
 %defattr(-,root,root,-)
+%license LICENSE.BSD
 %dir %{_libdir}/qt5/qml/Nemo/Alarms
 %{_libdir}/qt5/qml/Nemo/Alarms/libnemoalarms.so
 %{_libdir}/qt5/qml/Nemo/Alarms/plugins.qmltypes
