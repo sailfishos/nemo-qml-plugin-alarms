@@ -70,7 +70,7 @@ public:
     AlarmObject(QObject *parent = 0);
     AlarmObject(const QMap<QString,QString> &data, QObject *parent = 0);
 
-    enum Type { Calendar, Clock, Countdown, Reminder };
+    enum Type { Calendar, Clock, Countdown, Reminder, Other };
     Q_ENUMS(Type)
 
     QString title() const { return m_title; }
@@ -157,6 +157,7 @@ protected:
     QDateTime m_createdDate;
     bool m_countdown;
     bool m_reminder;
+    bool m_event;
     uint m_triggerTime;
     uint m_elapsed;
     QDateTime m_startDate, m_endDate;
