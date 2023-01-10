@@ -67,6 +67,9 @@ public:
     void registerTypes(const char *uri)
     {
         Q_ASSERT(uri == QLatin1String("Nemo.Alarms") || uri == QLatin1String("org.nemomobile.alarms"));
+        if (uri == QLatin1String("org.nemomobile.alarms")) {
+            qWarning() << "org.nemomobile.alarms is deprecated qml module name and subject to be removed. Please migrate to Nemo.Alarms";
+        }
         qmlRegisterType<AlarmsBackendModel>(uri, 1, 0, "AlarmsModel");
         qmlRegisterType<EnabledAlarmsProxyModel>(uri, 1, 0, "EnabledAlarmsProxyModel");
         qmlRegisterUncreatableType<AlarmObject>(uri, 1, 0, "Alarm", "Create Alarm via AlarmsModel");
