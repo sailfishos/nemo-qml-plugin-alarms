@@ -1,5 +1,5 @@
-PACKAGENAME = nemo-qml-plugin-alarms-qt5
-INSTALLLOCATION = /opt/tests/nemo-qml-plugins-qt5/alarms
+PACKAGENAME = nemo-qml-plugin-alarms-qt$${QT_MAJOR_VERSION}
+INSTALLLOCATION = /opt/tests/nemo-qml-plugins-qt$${QT_MAJOR_VERSION}/alarms
 
 TEMPLATE = subdirs
 SUBDIRS = tst_alarmsbackendmodel \

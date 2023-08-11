@@ -17,7 +17,7 @@ qmltypes.commands = qmlplugindump -nonrelocatable Nemo.Alarms 1.0 > $$PWD/plugin
 QMAKE_EXTRA_TARGETS += qmltypes
 
 CONFIG += link_pkgconfig
-PKGCONFIG += timed-qt5 timed-voland-qt5
+PKGCONFIG += timed-qt$${QT_MAJOR_VERSION} timed-voland-qt$${QT_MAJOR_VERSION}
 
 isEmpty(SRCDIR) SRCDIR = "."
 

@@ -37,8 +37,11 @@
 #include <QtGlobal>
 #include <QMap>
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <timed-qt6/interface>
+#else
 #include <timed-qt5/interface>
-
+#endif
 class QTimer;
 
 class TimedInterface : public Maemo::Timed::Interface
