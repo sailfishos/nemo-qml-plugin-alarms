@@ -35,8 +35,13 @@
 #include <QDBusPendingReply>
 #include <QDebug>
 
-# include <timed-qt5/event>
-# include <timed-qt5/exception>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <timed-qt6/event>
+#include <timed-qt6/exception>
+#else
+#include <timed-qt5/event>
+#include <timed-qt5/exception>
+#endif
 
 /*!
  *  \qmlproperty string Alarm::title
@@ -261,7 +266,11 @@ AlarmObject::AlarmObject(const QMap<QString,QString> &data, QObject *parent)
 
     if (m_enabled && m_countdown) {
         // Timer is running
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        qint64 now = QDateTime::currentDateTimeUtc().toSecsSinceEpoch();
+#else
         uint now = QDateTime::currentDateTimeUtc().toTime_t();
+#endif
         m_elapsed = m_triggerTime - now;
     }
 }
@@ -569,11 +578,20 @@ void AlarmObject::save()
             QDateTime now = QDateTime::currentDateTimeUtc();
             if (m_enabled) {
                 QDateTime triggerDateTime = now.addSecs(duration - m_elapsed);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+                m_triggerTime = triggerDateTime.toSecsSinceEpoch();
+                ev.setTicker(triggerDateTime.toSecsSinceEpoch());
+#else
                 m_triggerTime = triggerDateTime.toTime_t();
                 ev.setTicker(triggerDateTime.toTime_t());
+#endif
             } else {
                 if (m_triggerTime > 0) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+                    m_elapsed = (duration - (m_triggerTime - now.toSecsSinceEpoch()));
+#else
                     m_elapsed = (duration - (m_triggerTime - now.toTime_t()));
+#endif
                     m_triggerTime = 0;
                 } else {
                     m_elapsed = 0;

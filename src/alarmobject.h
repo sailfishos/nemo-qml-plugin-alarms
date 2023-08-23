@@ -100,7 +100,11 @@ public:
 
     uint triggerTime() const { return m_triggerTime; }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    qint64 getElapsed() const { return m_elapsed; }
+#else
     int getElapsed() const { return m_elapsed; }
+#endif
 
     int type() const;
 
@@ -157,8 +161,13 @@ protected:
     QDateTime m_createdDate;
     bool m_countdown;
     bool m_reminder;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    qint64 m_triggerTime;
+    qint64 m_elapsed;
+#else
     uint m_triggerTime;
     uint m_elapsed;
+#endif
     QDateTime m_startDate, m_endDate;
     QString m_uid;
     QString m_recurrenceId;

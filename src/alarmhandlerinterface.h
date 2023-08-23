@@ -35,7 +35,12 @@
 
 #include <QtGlobal>
 #include <QDBusAbstractAdaptor>
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <timed-voland-qt6/interface>
+#else
 #include <timed-voland-qt5/interface>
+#endif
 
 class VolandAdaptor;
 class VolandSignalAdaptor;

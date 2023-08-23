@@ -38,7 +38,11 @@ EnabledAlarmsProxyModel::EnabledAlarmsProxyModel(QObject *parent)
     : QSortFilterProxyModel(parent)
 {
     setFilterRole(AlarmsBackendModel::EnabledRole);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    setFilterRegularExpression(QRegularExpression("true"));
+#else
     setFilterRegExp(QRegExp("true"));
+#endif
 }
 
 QObject *EnabledAlarmsProxyModel::model() const
