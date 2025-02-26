@@ -85,13 +85,6 @@ void AlarmHandlerInterface::setupInterface()
     connect(signalWrapper, SIGNAL(error(QString)), this, SIGNAL(error(QString)));
 }
 
-bool VolandAdaptor::open(const Maemo::Timed::Voland::Reminder &data)
-{
-    AlarmDialogObject *obj = q->createDialog(data);
-    emit q->alarmReady(obj);
-    return true;
-}
-
 AlarmDialogObject *AlarmHandlerInterface::createDialog(const Maemo::Timed::Voland::Reminder &data)
 {
     AlarmDialogObject *obj = dialogs.value(data.cookie());
@@ -104,31 +97,6 @@ AlarmDialogObject *AlarmHandlerInterface::createDialog(const Maemo::Timed::Volan
     dialogs.insert(data.cookie(), obj);
     emit activeDialogsChanged();
     return obj;
-}
-
-bool VolandAdaptor::open(const QList<QVariant> &data)
-{
-    bool re = true;
-
-    foreach (const QVariant &v, data) {
-        QDBusArgument a = v.value<QDBusArgument>();
-        Maemo::Timed::Voland::Reminder r;
-        a >> r;
-        if (!r.cookie() || !open(r))
-            re = false;
-    }
-
-    return re;
-}
-
-bool VolandAdaptor::close(uint cookie)
-{
-    AlarmDialogObject *obj = q->dialogs.value(cookie);
-    if (!obj)
-        return false;
-
-    obj->closedExternally();
-    return true;
 }
 
 void AlarmHandlerInterface::dialogClosed(QObject *obj)
@@ -172,7 +140,6 @@ bool AlarmHandlerInterface::dialogOnScreen()
     return m_dialogOnScreen;
 }
 
-
 void AlarmHandlerInterface::setDialogOnScreen(bool onScreen)
 {
     if (onScreen != m_dialogOnScreen) {
@@ -185,6 +152,38 @@ void AlarmHandlerInterface::setDialogOnScreen(bool onScreen)
         emit dialogOnScreenChanged();
 
     }
+}
+
+bool VolandAdaptor::open(const Maemo::Timed::Voland::Reminder &data)
+{
+    AlarmDialogObject *obj = q->createDialog(data);
+    emit q->alarmReady(obj);
+    return true;
+}
+
+bool VolandAdaptor::open(const QList<QVariant> &data)
+{
+    bool re = true;
+
+    foreach (const QVariant &v, data) {
+        QDBusArgument a = v.value<QDBusArgument>();
+        Maemo::Timed::Voland::Reminder r;
+        a >> r;
+        if (!r.cookie() || !open(r))
+            re = false;
+    }
+
+    return re;
+}
+
+bool VolandAdaptor::close(uint cookie)
+{
+    AlarmDialogObject *obj = q->dialogs.value(cookie);
+    if (!obj)
+        return false;
+
+    obj->closedExternally();
+    return true;
 }
 
 VolandSignalAdaptor::VolandSignalAdaptor(QObject *parent) : QDBusAbstractAdaptor(parent)
