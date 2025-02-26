@@ -29,8 +29,7 @@ Requires:   %{name} = %{version}-%{release}
 %build
 
 %qmake5 
-
-make %{?_smp_mflags}
+%make_build
 
 %install
 %qmake5_install
@@ -41,7 +40,6 @@ ln -sf %{_libdir}/qt5/qml/Nemo/Alarms/libnemoalarms.so %{buildroot}%{_libdir}/qt
 sed 's/Nemo.Alarms/org.nemomobile.alarms/' < src/qmldir > %{buildroot}%{_libdir}/qt5/qml/org/nemomobile/alarms/qmldir
 
 %files
-%defattr(-,root,root,-)
 %license LICENSE.BSD
 %dir %{_libdir}/qt5/qml/Nemo/Alarms
 %{_libdir}/qt5/qml/Nemo/Alarms/libnemoalarms.so
@@ -54,5 +52,4 @@ sed 's/Nemo.Alarms/org.nemomobile.alarms/' < src/qmldir > %{buildroot}%{_libdir}
 %{_libdir}/qt5/qml/org/nemomobile/alarms/qmldir
 
 %files tests
-%defattr(-,root,root,-)
-/opt/tests/nemo-qml-plugins-qt5/alarms/*
+/opt/tests/nemo-qml-plugin-alarms-qt5/*

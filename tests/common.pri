@@ -9,5 +9,5 @@ CONFIG -= app_bundle
 
 DEFINES += USE_VOLAND_TEST_INTERFACE
 
-target.path = /opt/tests/nemo-qml-plugins-qt$${QT_MAJOR_VERSION}/alarms
+target.path = /opt/tests/nemo-qml-plugin-alarms-qt$${QT_MAJOR_VERSION}
 

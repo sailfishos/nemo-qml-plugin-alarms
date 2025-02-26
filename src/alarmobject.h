@@ -107,23 +107,14 @@ public:
 #endif
 
     int type() const;
-
     QDateTime startDate() const;
-
     QDateTime endDate() const;
-
     bool allDay() const;
-
     QString calendarUid() const;
-
     QString calendarEventUid() const;
-
     QString notebookUid() const;
-
     QString calendarEventRecurrenceId() const;
-
     QString phoneNumber() const { return m_phoneNumber; }
-
     int timeoutSnoozeCounter() const { return static_cast<int>(m_timeoutSnoozeCounter); }
 
     int maximalTimeoutSnoozeCount() const;
