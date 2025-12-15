@@ -49,7 +49,7 @@ void tst_AlarmsBackendModel::populated()
 {
     QScopedPointer<AlarmsBackendModel> model(new AlarmsBackendModel);
     QCOMPARE(model->isPopulated(), false);
-    QSignalSpy spy(model.data(), SIGNAL(populatedChanged()));
+    QSignalSpy spy(model.data(), &AlarmsBackendModel::populatedChanged);
     model->componentComplete();
     QTRY_COMPARE(model->isPopulated(), true);
     QCOMPARE(spy.count(), 1);
@@ -93,7 +93,7 @@ void tst_AlarmsBackendModel::createAndDelete()
 
     // Object will be freed when the model is destroyed
     {
-        QSignalSpy spy(alarm, SIGNAL(destroyed()));
+        QSignalSpy spy(alarm, &AlarmObject::destroyed);
         model.reset(new AlarmsBackendModel);
         model->componentComplete();
         alarm = 0;
@@ -120,7 +120,7 @@ void tst_AlarmsBackendModel::createAndDelete()
         alarm->setEnabled(true);
         QCOMPARE(alarm->isEnabled(), true);
 
-        QSignalSpy spy(alarm, SIGNAL(saved()));
+        QSignalSpy spy(alarm, &AlarmObject::saved);
         alarm->save();
         QTRY_COMPARE(spy.count(), 1);
     }
@@ -137,26 +137,26 @@ void tst_AlarmsBackendModel::setAlarmProperties()
     AlarmObject *alarm = model->createAlarm();
 
     {
-        QSignalSpy spy(alarm, SIGNAL(titleChanged()));
+        QSignalSpy spy(alarm, &AlarmObject::titleChanged);
         alarm->setTitle(QLatin1String("Test Alarm"));
         QCOMPARE(spy.count(), 1);
     }
 
     {
-        QSignalSpy spy(alarm, SIGNAL(timeChanged()));
+        QSignalSpy spy(alarm, &AlarmObject::timeChanged);
         alarm->setHour(10);
         alarm->setMinute(30);
         QCOMPARE(spy.count(), 2);
     }
 
     {
-        QSignalSpy spy(alarm, SIGNAL(daysOfWeekChanged()));
+        QSignalSpy spy(alarm, &AlarmObject::daysOfWeekChanged);
         alarm->setDaysOfWeek("mfwS");
         QCOMPARE(spy.count(), 1);
     }
 
     {
-        QSignalSpy spy(alarm, SIGNAL(enabledChanged()));
+        QSignalSpy spy(alarm, &AlarmObject::enabledChanged);
         alarm->setEnabled(true);
         QCOMPARE(spy.count(), 1);
     }

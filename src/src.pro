@@ -6,6 +6,9 @@ CONFIG += qt plugin hide_symbols
 QT -= gui
 QT += qml dbus
 
+CONFIG += link_pkgconfig warn_on
+PKGCONFIG += timed-qt$${QT_MAJOR_VERSION} timed-voland-qt$${QT_MAJOR_VERSION}
+
 target.path = $$[QT_INSTALL_QML]/$$PLUGIN_IMPORT_PATH
 INSTALLS += target
 
@@ -15,9 +18,6 @@ INSTALLS += qmldir
 
 qmltypes.commands = qmlplugindump -nonrelocatable Nemo.Alarms 1.0 > $$PWD/plugins.qmltypes
 QMAKE_EXTRA_TARGETS += qmltypes
-
-CONFIG += link_pkgconfig
-PKGCONFIG += timed-qt$${QT_MAJOR_VERSION} timed-voland-qt$${QT_MAJOR_VERSION}
 
 isEmpty(SRCDIR) SRCDIR = "."
 

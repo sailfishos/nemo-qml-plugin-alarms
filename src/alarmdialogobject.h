@@ -55,8 +55,8 @@ class AlarmDialogObject : public AlarmObject
     friend class AlarmHandlerInterface;
 
 public:
-    AlarmDialogObject(QObject *parent = 0);
-    AlarmDialogObject(const Maemo::Timed::Voland::Reminder &data, QObject *parent = 0);
+    AlarmDialogObject(QObject *parent = nullptr);
+    AlarmDialogObject(const Maemo::Timed::Voland::Reminder &data, QObject *parent = nullptr);
 
     bool hideSnoozeButton() const { return m_hideSnooze; }
 
@@ -77,10 +77,11 @@ private slots:
     void responseReply(QDBusPendingCallWatcher *w);
 
 private:
-    bool m_hideSnooze, m_hideDismiss, m_missed;
-
     void sendResponse(int code);
+
+    bool m_hideSnooze = false;
+    bool m_hideDismiss = false;
+    bool m_missed = false;
 };
 
 #endif
-

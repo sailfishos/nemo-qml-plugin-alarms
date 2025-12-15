@@ -32,6 +32,7 @@
 
 #include "alarmobject.h"
 #include "interface.h"
+
 #include <QDBusPendingReply>
 #include <QDebug>
 
@@ -200,16 +201,14 @@
  */
 
 AlarmObject::AlarmObject(QObject *parent)
-    : QObject(parent), m_hour(0), m_minute(0), m_second(0), m_enabled(false),
-      m_createdDate(QDateTime::currentDateTime()), m_countdown(false), m_reminder(false), m_triggerTime(0),
-      m_elapsed(0), m_cookie(0), m_timeoutSnoozeCounter(0), m_maximalTimeoutSnoozeCount(0)
+    : QObject(parent)
+    , m_createdDate(QDateTime::currentDateTime())
 {
 }
 
 AlarmObject::AlarmObject(const QMap<QString,QString> &data, QObject *parent)
-    : QObject(parent), m_hour(0), m_minute(0), m_second(0), m_enabled(false),
-      m_createdDate(QDateTime::currentDateTime()), m_countdown(false), m_reminder(false), m_triggerTime(0),
-      m_elapsed(0), m_cookie(0)
+    : QObject(parent)
+    , m_createdDate(QDateTime::currentDateTime())
 {
     for (QMap<QString,QString>::ConstIterator it = data.begin(); it != data.end(); it++) {
         if (it.key() == "TITLE") {
@@ -515,7 +514,6 @@ void AlarmObject::reset()
     emit triggerTimeChanged();
 }
 
-
 /*!
  *  \qmlmethod void Alarm::save()
  *
@@ -609,7 +607,7 @@ void AlarmObject::save()
             w = new QDBusPendingCallWatcher(TimedInterface::instance()->replace_event_async(ev, m_cookie), this);
         else
             w = new QDBusPendingCallWatcher(TimedInterface::instance()->add_event_async(ev), this);
-        connect(w, SIGNAL(finished(QDBusPendingCallWatcher*)), SLOT(saveReply(QDBusPendingCallWatcher*)));
+        connect(w, &QDBusPendingCallWatcher::finished, this, &AlarmObject::saveReply);
 
         // Emit the updated signal immediately to update UI
         emit updated();
@@ -633,7 +631,6 @@ void AlarmObject::saveReply(QDBusPendingCallWatcher *w)
     emit saved();
 }
 
-
 /*!
  *  \qmlmethod void Alarm::deleteAlarm()
  *
@@ -647,8 +644,8 @@ void AlarmObject::deleteAlarm()
     }
 
     QDBusPendingCall re = TimedInterface::instance()->cancel_async(m_cookie);
-    QDBusPendingCallWatcher *w = new QDBusPendingCallWatcher(re, this);
-    connect(w, SIGNAL(finished(QDBusPendingCallWatcher*)), SLOT(deleteReply(QDBusPendingCallWatcher*)));
+    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(re, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, &AlarmObject::deleteReply);
 
     emit deleted();
     m_cookie = 0;

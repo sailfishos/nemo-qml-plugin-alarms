@@ -6,11 +6,11 @@ TimedInterface::TimedInterface()
     timer = new QTimer(this);
     timer->setSingleShot(true);
     timer->setInterval(500);
-    connect(timer, SIGNAL(timeout()), this, SLOT(processAlarmTriggers()));
-    alarm_triggers_changed_connect(this, SLOT(alarmTriggersChanged(Maemo::Timed::Event::Triggers)));
+    connect(timer, &QTimer::timeout, this, &TimedInterface::emitAlarmTriggers);
+    alarm_triggers_changed_connect(this, SLOT(handleAlarmTriggersChanged(Maemo::Timed::Event::Triggers)));
 }
 
-void TimedInterface::alarmTriggersChanged(Maemo::Timed::Event::Triggers map)
+void TimedInterface::handleAlarmTriggersChanged(Maemo::Timed::Event::Triggers map)
 {
     triggerMap = map;
 
@@ -19,14 +19,14 @@ void TimedInterface::alarmTriggersChanged(Maemo::Timed::Event::Triggers map)
     timer->start();
 }
 
-void TimedInterface::processAlarmTriggers()
+void TimedInterface::emitAlarmTriggers()
 {
     emit alarmTriggersChanged(triggerMap);
 }
 
 TimedInterface *TimedInterface::instance()
 {
-    static TimedInterface *timed = 0;
+    static TimedInterface *timed = nullptr;
     if (!timed)
         timed = new TimedInterface;
     return timed;

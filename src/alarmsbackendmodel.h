@@ -55,20 +55,20 @@ public:
         WeekDaysRole
     };
 
-    AlarmsBackendModel(QObject *parent = 0);
+    AlarmsBackendModel(QObject *parent = nullptr);
     virtual ~AlarmsBackendModel();
 
     Q_INVOKABLE AlarmObject *createAlarm();
-    bool isPopulated() const;
 
+    bool isPopulated() const;
     bool isOnlyCountdown() const;
     void setOnlyCountdown(bool countdown);
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
 
-    void classBegin();
-    void componentComplete();
+    void classBegin() override;
+    void componentComplete() override;
 
     Q_INVOKABLE void reset();
 
