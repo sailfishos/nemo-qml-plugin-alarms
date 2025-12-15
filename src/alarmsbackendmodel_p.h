@@ -32,6 +32,7 @@
 
 #ifndef ALARMSBACKENDMODEL_P_H
 #define ALARMSBACKENDMODEL_P_H
+
 #include "alarmsbackendmodel.h"
 
 class AlarmObject;
@@ -53,9 +54,11 @@ public:
 
 public slots:
     void alarmUpdated();
-    void alarmUpdated(AlarmObject *alarm);
     void alarmDeleted();
-    void alarmDeleted(AlarmObject *alarm);
+
+private:
+    void handleAlarmUpdated(AlarmObject *alarm);
+    void handleAlarmDeleted(AlarmObject *alarm);
 
 private slots:
     void queryReply(QDBusPendingCallWatcher *w);
@@ -64,4 +67,3 @@ private slots:
 };
 
 #endif
-

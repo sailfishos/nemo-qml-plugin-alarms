@@ -33,6 +33,7 @@
 #include "alarmsbackendmodel_p.h"
 #include "alarmobject.h"
 #include "interface.h"
+
 #include <QDBusMessage>
 #include <QDBusReply>
 #include <QQmlEngine>
@@ -65,8 +66,8 @@ inline static bool alarmSort(AlarmObject *a1, AlarmObject *a2)
 AlarmsBackendModelPriv::AlarmsBackendModelPriv(AlarmsBackendModel *m)
     : QObject(m), q(m), populated(false), countdown(false)
 {
-    connect(TimedInterface::instance(), SIGNAL(alarmTriggersChanged(QMap<quint32,quint32>)),
-            this, SLOT(alarmTriggersChanged(QMap<quint32,quint32>)));
+    connect(TimedInterface::instance(), &TimedInterface::alarmTriggersChanged,
+            this, &AlarmsBackendModelPriv::alarmTriggersChanged);
 }
 
 void AlarmsBackendModelPriv::populate()
@@ -80,7 +81,7 @@ void AlarmsBackendModelPriv::populate()
         attributes.insert(QLatin1String("type"), "clock");
 
     QDBusPendingCallWatcher *reply = new QDBusPendingCallWatcher(TimedInterface::instance()->query_async(attributes), this);
-    connect(reply, SIGNAL(finished(QDBusPendingCallWatcher*)), SLOT(queryReply(QDBusPendingCallWatcher*)));
+    connect(reply, &QDBusPendingCallWatcher::finished, this, &AlarmsBackendModelPriv::queryReply);
 }
 
 void AlarmsBackendModelPriv::queryReply(QDBusPendingCallWatcher *call)
@@ -102,7 +103,7 @@ void AlarmsBackendModelPriv::queryReply(QDBusPendingCallWatcher *call)
     // Get a list of attributes for each of those cookies
     QDBusPendingCall call2 = TimedInterface::instance()->get_attributes_by_cookies_async(cookies);
     QDBusPendingCallWatcher *reply2 = new QDBusPendingCallWatcher(call2, this);
-    connect(reply2, SIGNAL(finished(QDBusPendingCallWatcher*)), SLOT(attributesReply(QDBusPendingCallWatcher*)));
+    connect(reply2, &QDBusPendingCallWatcher::finished, this, &AlarmsBackendModelPriv::attributesReply);
 }
 
 void AlarmsBackendModelPriv::attributesReply(QDBusPendingCallWatcher *call)
@@ -124,8 +125,8 @@ void AlarmsBackendModelPriv::attributesReply(QDBusPendingCallWatcher *call)
 
     foreach (const attributes &data, reply.value()) {
         AlarmObject *alarm = new AlarmObject(data, this);
-        connect(alarm, SIGNAL(updated()), SLOT(alarmUpdated()));
-        connect(alarm, SIGNAL(deleted()), SLOT(alarmDeleted()));
+        connect(alarm, &AlarmObject::updated, this, &AlarmsBackendModelPriv::alarmUpdated);
+        connect(alarm, &AlarmObject::deleted, this, &AlarmsBackendModelPriv::alarmDeleted);
         alarms.append(alarm);
     }
 
@@ -158,10 +159,10 @@ void AlarmsBackendModelPriv::alarmUpdated()
 {
     AlarmObject *alarm = qobject_cast<AlarmObject*>(sender());
     if (alarm)
-        alarmUpdated(alarm);
+        handleAlarmUpdated(alarm);
 }
 
-void AlarmsBackendModelPriv::alarmUpdated(AlarmObject *alarm)
+void AlarmsBackendModelPriv::handleAlarmUpdated(AlarmObject *alarm)
 {
     int currentRow = alarms.indexOf(alarm);
 
@@ -183,23 +184,23 @@ void AlarmsBackendModelPriv::alarmUpdated(AlarmObject *alarm)
         q->beginInsertRows(QModelIndex(), newRow, newRow);
         alarms.insert(newRow, alarm);
         q->endInsertRows();
-        return;
     } else if (newRow != currentRow) {
         q->beginMoveRows(QModelIndex(), currentRow, currentRow, QModelIndex(), newRow > currentRow ? newRow + 1 : newRow);
         alarms.move(currentRow, newRow);
         q->endMoveRows();
-    } else
+    } else {
         emit q->dataChanged(q->index(currentRow, 0), q->index(currentRow, 0));
+    }
 }
 
 void AlarmsBackendModelPriv::alarmDeleted()
 {
     AlarmObject *alarm = qobject_cast<AlarmObject*>(sender());
     if (alarm)
-        alarmDeleted(alarm);
+        handleAlarmDeleted(alarm);
 }
 
-void AlarmsBackendModelPriv::alarmDeleted(AlarmObject *alarm)
+void AlarmsBackendModelPriv::handleAlarmDeleted(AlarmObject *alarm)
 {
     int row = alarms.indexOf(alarm);
     if (row >= 0) {

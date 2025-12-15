@@ -42,20 +42,19 @@
 #include <QDBusMessage>
 #include <QDBusPendingCallWatcher>
 
-#define TIMED_CONNECTION       QDBusConnection::systemBus()
 #define TIMED_SERVICE          "com.nokia.time"
 #define TIMED_PATH             "/com/nokia/time"
 #define CLOCK_APP              "nemoalarms"
 
-AlarmSettings::AlarmSettings(QObject* parent) :
-    QObject(parent),
-    m_snooze(-1),
-    m_ready(false),
-    m_daemon(new TimeDaemon(TIMED_SERVICE, TIMED_PATH, TIMED_CONNECTION, this))
+AlarmSettings::AlarmSettings(QObject* parent)
+    : QObject(parent)
+    , m_snooze(-1)
+    , m_ready(false)
+    , m_daemon(new TimeDaemon(TIMED_SERVICE, TIMED_PATH, QDBusConnection::systemBus(), this))
 {
-    connect(new QDBusPendingCallWatcher(
-        m_daemon->get_app_snooze(CLOCK_APP), m_daemon),
-        &QDBusPendingCallWatcher::finished, this, &AlarmSettings::onSnoozeFinished);
+    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(m_daemon->get_app_snooze(CLOCK_APP), m_daemon);
+    connect(watcher, &QDBusPendingCallWatcher::finished,
+            this, &AlarmSettings::onSnoozeFinished);
 }
 
 int AlarmSettings::snooze() const

@@ -54,8 +54,8 @@ signals:
     void alarmTriggersChanged(QMap<quint32, quint32>);
 
 private slots:
-    void alarmTriggersChanged(Maemo::Timed::Event::Triggers map);
-    void processAlarmTriggers();
+    void handleAlarmTriggersChanged(Maemo::Timed::Event::Triggers map);
+    void emitAlarmTriggers();
 
 private:
     TimedInterface();
@@ -65,4 +65,3 @@ private:
 };
 
 #endif
-

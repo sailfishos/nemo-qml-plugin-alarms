@@ -56,7 +56,7 @@ public:
         MaximumSnooze = 1800
     };
 
-    AlarmSettings(QObject* parent = NULL);
+    AlarmSettings(QObject* parent = nullptr);
 
     int snooze() const;
     void setSnooze(int snooze);

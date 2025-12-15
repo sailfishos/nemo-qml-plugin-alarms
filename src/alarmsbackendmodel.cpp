@@ -68,8 +68,8 @@ QHash<int, QByteArray> AlarmsBackendModel::roleNames() const
 AlarmObject *AlarmsBackendModel::createAlarm()
 {
     AlarmObject *alarm = new AlarmObject(this);
-    connect(alarm, SIGNAL(updated()), priv, SLOT(alarmUpdated()));
-    connect(alarm, SIGNAL(deleted()), priv, SLOT(alarmDeleted()));
+    connect(alarm, &AlarmObject::updated, priv, &AlarmsBackendModelPriv::alarmUpdated);
+    connect(alarm, &AlarmObject::deleted, priv, &AlarmsBackendModelPriv::alarmDeleted);
     return alarm;
 }
 
@@ -153,4 +153,3 @@ void AlarmsBackendModel::reset()
 {
     priv->reset();
 }
-

@@ -62,7 +62,7 @@ class AlarmHandlerInterface : public QObject
     Q_PROPERTY(bool dialogOnScreen READ dialogOnScreen WRITE setDialogOnScreen NOTIFY dialogOnScreenChanged)
 
 public:
-    AlarmHandlerInterface(QObject *parent = 0);
+    AlarmHandlerInterface(QObject *parent = nullptr);
 
     QList<QObject*> activeDialogs() const;
 
@@ -118,6 +118,7 @@ class VolandSignalWrapper: public QObject
 
 public:
     VolandSignalWrapper(QObject *parent);
+
     void setupInterface();
 
 signals:
@@ -138,4 +139,3 @@ signals:
 };
 
 #endif
-

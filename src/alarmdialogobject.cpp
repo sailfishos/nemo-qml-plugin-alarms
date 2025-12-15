@@ -32,11 +32,13 @@
 
 #include "alarmdialogobject.h"
 #include "interface.h"
+
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <timed-voland-qt6/reminder>
 #else
 #include <timed-voland-qt5/reminder>
 #endif
+
 #include <QDBusPendingReply>
 #include <QDBusPendingCallWatcher>
 
@@ -66,7 +68,7 @@
  */
 
 AlarmDialogObject::AlarmDialogObject(QObject *parent)
-    : AlarmObject(parent), m_hideSnooze(false), m_hideDismiss(false), m_missed(false)
+    : AlarmObject(parent)
 {
 }
 
@@ -122,19 +124,18 @@ void AlarmDialogObject::closedExternally()
 void AlarmDialogObject::sendResponse(int code)
 {
     QDBusPendingCall call = TimedInterface::instance()->dialog_response_async(id(), code);
-    QDBusPendingCallWatcher *w = new QDBusPendingCallWatcher(call, this);
-    connect(w, SIGNAL(finished(QDBusPendingCallWatcher*)), SLOT(responseReply(QDBusPendingCallWatcher*)));
+    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, &AlarmDialogObject::responseReply);
 
     // Close dialog
     emit closed(this);
 }
 
-void AlarmDialogObject::responseReply(QDBusPendingCallWatcher *w)
+void AlarmDialogObject::responseReply(QDBusPendingCallWatcher *watcher)
 {
-    QDBusPendingReply<bool> reply = *w;
-    w->deleteLater();
+    QDBusPendingReply<bool> reply = *watcher;
+    watcher->deleteLater();
 
     if (reply.isError())
         qWarning() << "Nemo.Alarms: Error from sending alarm dialog response:" << reply.error();
 }
-

@@ -116,7 +116,7 @@ void tst_AlarmHandler::openDialog()
     QScopedPointer<AlarmHandlerInterface> handler(new AlarmHandlerInterface);
 
     {
-        QSignalSpy spy(handler.data(), SIGNAL(error(QString)));
+        QSignalSpy spy(handler.data(), &AlarmHandlerInterface::error);
         QTest::qWait(0);
         QCOMPARE(spy.count(), 0);
     }
@@ -126,11 +126,11 @@ void tst_AlarmHandler::openDialog()
 
     QVERIFY(handler->activeDialogs().isEmpty());
 
-    AlarmDialogObject *alarm = 0;
-    QSignalSpy activeDialogsSpy(handler.data(), SIGNAL(activeDialogsChanged()));
+    AlarmDialogObject *alarm = nullptr;
+    QSignalSpy activeDialogsSpy(handler.data(), &AlarmHandlerInterface::activeDialogsChanged);
 
     {
-        QSignalSpy spy(handler.data(), SIGNAL(alarmReady(QObject*)));
+        QSignalSpy spy(handler.data(), &AlarmHandlerInterface::alarmReady);
 
         TestReminder reminder;
         QVariantList list;
@@ -138,7 +138,7 @@ void tst_AlarmHandler::openDialog()
         QDBusPendingCall call = interface->asyncCallWithArgumentList("open", list);
         QScopedPointer<QDBusPendingCallWatcher> w(new QDBusPendingCallWatcher(call, interface.data()));
  
-        QSignalSpy callSpy(w.data(), SIGNAL(finished(QDBusPendingCallWatcher*)));
+        QSignalSpy callSpy(w.data(), &QDBusPendingCallWatcher::finished);
         QTRY_COMPARE(callSpy.count(), 1);
  
         QDBusPendingReply<bool> reply = *w.data();
@@ -158,7 +158,7 @@ void tst_AlarmHandler::openDialog()
     QCOMPARE(alarm->id(), 1);
     QCOMPARE(alarm->title(), QString("Test Alarm"));
 
-    QSignalSpy spy(alarm, SIGNAL(closed(QObject*)));
+    QSignalSpy spy(alarm, &AlarmDialogObject::closed);
     alarm->dismiss();
     QCOMPARE(spy.count(), 1);
     QCOMPARE(activeDialogsSpy.count(), 2);

@@ -32,6 +32,7 @@
 
 #include "alarmhandlerinterface.h"
 #include "alarmdialogobject.h"
+
 #include <QTimer>
 
 /*!
@@ -53,7 +54,7 @@ AlarmHandlerInterface::AlarmHandlerInterface(QObject *parent)
       signalWrapper(new VolandSignalWrapper(this)),
       m_dialogOnScreen(false)
 {
-    QTimer::singleShot(0, this, SLOT(setupInterface()));
+    QTimer::singleShot(0, this, &AlarmHandlerInterface::setupInterface);
 }
 
 void AlarmHandlerInterface::setupInterface()
@@ -63,6 +64,7 @@ void AlarmHandlerInterface::setupInterface()
 #else
     QDBusConnection bus = Maemo::Timed::Voland::bus();
 #endif
+
     if (!bus.registerObject(Maemo::Timed::Voland::objpath(), this)) {
         qWarning() << "Nemo.Alarms: Cannot register voland object for AlarmHandler";
         emit error(QLatin1String("Cannot register alarm handler object"));
@@ -74,6 +76,7 @@ void AlarmHandlerInterface::setupInterface()
 #else
     QString serviceName(Maemo::Timed::Voland::service());
 #endif
+
     if (!bus.registerService(serviceName)) {
         qWarning() << "Nemo.Alarms: Cannot register voland service for AlarmHandler";
         emit error(QLatin1String("Cannot register alarm handler service"));
@@ -81,8 +84,10 @@ void AlarmHandlerInterface::setupInterface()
     }
 
     signalWrapper->setupInterface();
-    connect(this, SIGNAL(visual_reminders_status(int)), signalWrapper, SIGNAL(visual_reminders_status(int)));
-    connect(signalWrapper, SIGNAL(error(QString)), this, SIGNAL(error(QString)));
+    connect(this, &AlarmHandlerInterface::visual_reminders_status,
+            signalWrapper, &VolandSignalWrapper::visual_reminders_status);
+    connect(signalWrapper, &VolandSignalWrapper::error,
+            this, &AlarmHandlerInterface::error);
 }
 
 AlarmDialogObject *AlarmHandlerInterface::createDialog(const Maemo::Timed::Voland::Reminder &data)
@@ -92,7 +97,7 @@ AlarmDialogObject *AlarmHandlerInterface::createDialog(const Maemo::Timed::Volan
         obj->closedExternally();
 
     obj = new AlarmDialogObject(data, this);
-    connect(obj, SIGNAL(closed(QObject*)), SLOT(dialogClosed(QObject*)));
+    connect(obj, &AlarmDialogObject::closed, this, &AlarmHandlerInterface::dialogClosed);
 
     dialogs.insert(data.cookie(), obj);
     emit activeDialogsChanged();

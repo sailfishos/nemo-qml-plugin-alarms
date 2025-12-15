@@ -67,8 +67,8 @@ class AlarmObject : public QObject
     Q_PROPERTY(int maximalTimeoutSnoozeCount READ maximalTimeoutSnoozeCount WRITE setMaximalTimeoutSnoozeCount NOTIFY maximalTimeoutSnoozeCountChanged)
 
 public:
-    AlarmObject(QObject *parent = 0);
-    AlarmObject(const QMap<QString,QString> &data, QObject *parent = 0);
+    AlarmObject(QObject *parent = nullptr);
+    AlarmObject(const QMap<QString,QString> &data, QObject *parent = nullptr);
 
     enum Type { Calendar, Clock, Countdown, Reminder };
     Q_ENUMS(Type)
@@ -146,18 +146,20 @@ private slots:
 
 protected:
     QString m_title;
-    int m_hour, m_minute, m_second;
+    int m_hour = 0;
+    int m_minute = 0;
+    int m_second = 0;
     QString m_daysOfWeek;
-    bool m_enabled;
+    bool m_enabled = false;
     QDateTime m_createdDate;
-    bool m_countdown;
-    bool m_reminder;
+    bool m_countdown = false;
+    bool m_reminder = false;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    qint64 m_triggerTime;
-    qint64 m_elapsed;
+    qint64 m_triggerTime = 0;
+    qint64 m_elapsed = 0;
 #else
-    uint m_triggerTime;
-    uint m_elapsed;
+    uint m_triggerTime = 0;
+    uint m_elapsed = 0;
 #endif
     QDateTime m_startDate, m_endDate;
     QString m_uid;
@@ -166,10 +168,9 @@ protected:
     QString m_phoneNumber;
 
     // Timed
-    unsigned m_cookie;
-    unsigned m_timeoutSnoozeCounter;
-    int m_maximalTimeoutSnoozeCount;
+    unsigned m_cookie = 0;
+    unsigned m_timeoutSnoozeCounter = 0;
+    int m_maximalTimeoutSnoozeCount = 0;
 };
 
 #endif
-
